@@ -33,10 +33,10 @@ http://localhost:51485/Home
 
 * [HtmlAgilityPack](https://html-agility-pack.net/) - Framework para el uso de HTML
 * [Bootstrap](https://getbootstrap.com/) - Framework para el uso de bootstrap en el HTML
-* [jQuery] (https://jquery.com/) - Framework para la manipulación y uso de datos en el HTML
-* [jQuery datetimepicker] (https://xdsoft.net/jqplugins/datetimepicker/) - Framework para la manipulación y uso de datos fecha hora en el HTML
-* [SweetAlert] (https://sweetalert.js.org/guides/) - Framework para la presentacion de mensajes en el HTML
-* [FontAwesome] (https://fontawesome.com/v4/icons/) - Framework para la presentacion de iconos en el HTML
+* [jQuery](https://jquery.com/) - Framework para la manipulación y uso de datos en el HTML
+* [jQuery datetimepicker](https://xdsoft.net/jqplugins/datetimepicker/) - Framework para la manipulación y uso de datos fecha hora en el HTML
+* [SweetAlert](https://sweetalert.js.org/guides/) - Framework para la presentacion de mensajes en el HTML
+* [FontAwesome](https://fontawesome.com/v4/icons/) - Framework para la presentacion de iconos en el HTML
 
 ## Autores ✒️
 
