@@ -1,0 +1,266 @@
+﻿@model Business.Entity.Example
+
+<style>
+    .fa-custom {
+        position: absolute;
+        right: 25px;
+        top: 11px;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .div-radio-options {
+        margin-top: 7px;
+    }
+</style>
+
+@using (Html.BeginForm("ConfirmFormExample", "Example", FormMethod.Post, new { @onsubmit = "return onValidateFormExample()", @class = "col-md-10 mt-3" }))
+{
+    @Html.Hidden("id", (Model != null) ? Model.Id : 0)
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputRut", "Rut", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBox("inputRut", (Model != null) ? Model.Rut : "", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputName", "Name", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBox("inputName", (Model != null) ? Model.Name : "", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputLastName", "LastName", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBox("inputLastName", (Model != null) ? Model.LastName : "", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputBirthDate", "BirthDate", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.TextBox("inputBirthDate", (Model != null) ? Model.BirthDate.ToString("yyyy-MM-dd") : "", new { @class = "form-control" })
+            <i class="fa fa-custom fa-calendar" onclick="showInputBirthDate()"></i>
+        </div>
+    </div>
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputActive", "Active", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            <div class="form-check form-check-inline div-radio-options">
+                @Html.RadioButton("inputActiveRadioOptions", "yes", ((Model != null) ? ((Model.Active) ? true : false) : false), new { @id = "inputYesActive", @class = "form-check-input" })
+                @Html.Label("inputYesActive", "Yes", new { @class = "form-check-label" })
+            </div>
+            <div class="form-check form-check-inline div-radio-options">
+                @Html.RadioButton("inputActiveRadioOptions", "no", ((Model != null) ? ((Model.Active) ? false : true) : false), new { @id = "inputNonActive", @class = "form-check-input" })
+                @Html.Label("inputNonActive", "No", new { @class = "form-check-label" })
+            </div>            
+        </div>
+    </div>
+    <div class="justify-content-center row form-group">
+        <div class="col-sm-3">
+            @Html.Label("inputPassword", "Password", new { @class = "col-form-label" })
+        </div>
+        <div class="col-sm-9">
+            @Html.Password("inputPassword", "", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="justify-content-center row form-group" style="margin-top: 40px; border: 1px solid rgba(0,0,0,.125);">
+    </div>
+    <div class="justify-content-center row form-group" style="margin-top: 40px; margin-bottom: 40px;">
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-outline-secondary btn-block" onclick="onClickClean()"><i class="fa fa-eraser">Limpiar</i></button>
+        </div>
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-outline-success btn-block">
+                @if (Model != null)
+                {
+                    <i class="fa fa-refresh">Actualizar</i>
+                }
+                else
+                {
+                    <i class="fa fa-check">Insertar</i>
+                }
+            </button>
+        </div>
+        <div class="col-sm-4">
+            <a class="btn btn-outline-primary btn-block" href="@Url.Action("List","Example")"><i class="fa fa-backward">Volver</i></a>
+        </div>
+    </div>
+
+}
+
+<script type="text/javascript">
+    window.onload = function () {
+        $.datetimepicker.setLocale('es');
+
+        $('#inputBirthDate').datetimepicker({
+            minDate: getMinDateInputBirthDate(),
+            maxDate: getMaxDateInputBirthDate(),
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+
+        $('#inputRut').attr('maxlength', getMaxValueInputRut());
+        $('#inputName').attr('maxlength', getMaxValueInputName());
+        $('#inputLastName').attr('maxlength', getMaxValueInputLastName());
+        $('#inputPassword').attr('maxlength', getMaxValueInputPassword());
+    }    
+
+    function getMaxValueInputRut() {
+        return 12;
+    }
+
+    function getMaxValueInputName() {
+        return 45;
+    }
+
+    function getMaxValueInputLastName() {
+        return 45;
+    }
+
+    function getMaxValueInputPassword() {
+        return 16;
+    }
+
+    function getMinDateInputBirthDate() {
+        var date = '@DateTime.Now.AddYears(-120).ToString("yyyy-MM-dd")';
+        return date;
+    }
+
+    function getMaxDateInputBirthDate() {
+        var date = '@DateTime.Now.ToString("yyyy-MM-dd")';
+        return date;
+    }
+
+    function showInputBirthDate() {
+        $('#inputBirthDate').datetimepicker('show');
+    }
+
+    function onClickClean() {
+        $('#inputRut').val('');
+        $('#inputName').val('');
+        $('#inputLastName').val('');
+        $('#inputBirthDate').val('');
+        $('#inputYesActive').prop('checked', false);
+        $('#inputNonActive').prop('checked', false);
+        $('#inputPassword').val('');
+    }
+
+    function onValidateFormExample() {
+        var stringMessage = '';
+
+        var valInputRut = $('#inputRut').val();
+        if (valInputRut.trim().length == 0){
+            stringMessage = '- Parámetro Rut no puede estar vacio';
+        }
+        else if (valInputRut.trim().length > getMaxValueInputRut()){
+            stringMessage = '- Parámetro Rut no debe ser mayor a ' + getMaxValueInputRut() + ' caracteres de largo';
+        }
+        else if (!onValidateRut(valInputRut)) {
+            stringMessage = '- Parámetro Rut no es válido';
+        }
+
+        var valInputName = $('#inputName').val();
+        if (valInputName.trim().length == 0) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Name no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Name no puede estar vacio';
+
+        } else if (valInputName.trim().length > getMaxValueInputName()) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Name no debe ser mayor a ' + getMaxValueInputName() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Name no debe ser mayor a ' + getMaxValueInputName() + ' caracteres de largo';
+
+        }
+
+        var valInputLastName = $('#inputLastName').val();
+        if (valInputLastName.trim().length == 0) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro LastName no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro LastName no puede estar vacio';
+
+        } else if (valInputLastName.trim().length > getMaxValueInputLastName()) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro LastName no debe ser mayor a ' + getMaxValueInputLastName() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro LastName no debe ser mayor a ' + getMaxValueInputLastName() + ' caracteres de largo';
+
+        }
+
+        var valInputBirthDate = $('#inputBirthDate').val();
+        if (valInputBirthDate == '') {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro BirthDate no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro BirthDate no puede estar vacio';
+
+        } else {
+
+            var date = new Date(valInputBirthDate);
+            var today = new Date(getMaxDateInputBirthDate());
+            if (date > today) {
+
+                if (stringMessage.length == 0)
+                    stringMessage = '- Parámetro BirthDate no puede ser mayor a la fecha actual';
+                else
+                    stringMessage = stringMessage + '\n- Parámetro BirthDate no puede ser mayor a la fecha actual';
+
+            }
+
+        }
+
+        var valInputActive = $('input:radio[name=inputActiveRadioOptions]:checked').val();
+        if (valInputActive == undefined) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Active no esta seleccionado. Debe seleccionar una opcion';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Active no esta seleccionado. Debe seleccionar una opcion';
+
+        }
+
+        var valInputPassword = $('#inputPassword').val();
+        if (valInputPassword.trim().length == 0) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Password no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Password no puede estar vacio';
+
+        } else if (valInputLastName.trim().length > getMaxValueInputPassword()) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Password no debe ser mayor a ' + getMaxValueInputPassword() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Password no debe ser mayor a ' + getMaxValueInputPassword() + ' caracteres de largo';
+
+        }
+
+        if (stringMessage.length == 0) {
+            return true;
+        }
+        else {
+            swal('Requerido', stringMessage, 'info');
+            return false;
+        }
+    }
+</script>
