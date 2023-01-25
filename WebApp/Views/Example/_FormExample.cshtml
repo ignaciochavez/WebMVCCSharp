@@ -1,6 +1,6 @@
 ﻿@model Business.Entity.Example
 
-<style>
+<style type="text/css">
     .fa-custom {
         position: absolute;
         right: 25px;
@@ -24,7 +24,7 @@
             @Html.Label("inputRut", "Rut", new { @class = "col-form-label" })
         </div>
         <div class="col-sm-9">
-            @Html.TextBox("inputRut", (Model != null) ? Model.Rut : "", new { @class = "form-control" })
+            @Html.TextBox("inputRut", (Model != null) ? Model.Rut : "", new { @class = "form-control", @onblur = "onFormatRut()" })
         </div>
     </div>
     <div class="justify-content-center row form-group">
@@ -49,7 +49,7 @@
         </div>
         <div class="col-sm-9">
             @Html.TextBox("inputBirthDate", (Model != null) ? Model.BirthDate.ToString("yyyy-MM-dd") : "", new { @class = "form-control" })
-            <i class="fa fa-custom fa-calendar" onclick="showInputBirthDate()"></i>
+            <i class="fa fa-custom fa-calendar" onclick="onShowInputBirthDate()"></i>
         </div>
     </div>
     <div class="justify-content-center row form-group">
@@ -78,10 +78,10 @@
     <div class="justify-content-center row form-group" style="margin-top: 40px; border: 1px solid rgba(0,0,0,.125);">
     </div>
     <div class="justify-content-center row form-group" style="margin-top: 40px; margin-bottom: 40px;">
-        <div class="col-sm-4">
+        <div class="col-lg-4">
             <button type="button" class="btn btn-outline-secondary btn-block" onclick="onClickClean()"><i class="fa fa-eraser">Limpiar</i></button>
         </div>
-        <div class="col-sm-4">
+        <div class="col-lg-4">
             <button type="submit" class="btn btn-outline-success btn-block">
                 @if (Model != null)
                 {
@@ -93,7 +93,7 @@
                 }
             </button>
         </div>
-        <div class="col-sm-4">
+        <div class="col-lg-4">
             <a class="btn btn-outline-primary btn-block" href="@Url.Action("List","Example")"><i class="fa fa-backward">Volver</i></a>
         </div>
     </div>
@@ -101,15 +101,18 @@
 }
 
 <script type="text/javascript">
-    window.onload = function () {
+    window.onload = function ()
+    {
         $.datetimepicker.setLocale('es');
 
-        $('#inputBirthDate').datetimepicker({
+        $('#inputBirthDate').datetimepicker(
+            {
             minDate: getMinDateInputBirthDate(),
             maxDate: getMaxDateInputBirthDate(),
             timepicker: false,
             format: 'Y-m-d'
-        });
+            }
+        );
 
         $('#inputRut').attr('maxlength', getMaxValueInputRut());
         $('#inputName').attr('maxlength', getMaxValueInputName());
@@ -117,37 +120,92 @@
         $('#inputPassword').attr('maxlength', getMaxValueInputPassword());
     }    
 
-    function getMaxValueInputRut() {
+    function getMaxValueInputRut()
+    {
         return 12;
     }
 
-    function getMaxValueInputName() {
+    function getMaxValueInputName()
+    {
         return 45;
     }
 
-    function getMaxValueInputLastName() {
+    function getMaxValueInputLastName()
+    {
         return 45;
     }
 
-    function getMaxValueInputPassword() {
+    function getMaxValueInputPassword()
+    {
         return 16;
     }
 
-    function getMinDateInputBirthDate() {
+    function getMinDateInputBirthDate()
+    {
         var date = '@DateTime.Now.AddYears(-120).ToString("yyyy-MM-dd")';
         return date;
     }
 
-    function getMaxDateInputBirthDate() {
+    function getMaxDateInputBirthDate()
+    {
         var date = '@DateTime.Now.ToString("yyyy-MM-dd")';
         return date;
     }
 
-    function showInputBirthDate() {
+    function onFormatRut()
+    {
+        var rut = $('#inputRut').val();
+        if (rut.trim().length == 0 || rut.trim().length == 1 || (rut.trim().includes('-') && rut.trim().length == 2))
+        {
+            $('#inputRut').val(rut.trim().toUpperCase());
+        }
+        else
+        {
+            rut = rut.replaceAll(' ', '');
+            rut = rut.replaceAll('.', '');
+            rut = rut.replaceAll('-', '');
+            rut = rut.toUpperCase();
+            var counter = 0;
+            var rutInvested = "";
+            var finalRut = "";
+
+            while (rut.indexOf(".") != -1) {
+                rut = rut.replace(".", "");
+            }
+
+            rut = rut.replace("-", "");
+
+            for (var i = rut.length - 1; i >= 0; i--) {
+                rutInvested += rut.charAt(i);
+                if (i == rut.length - 1) {
+                    rutInvested += "-";
+                }
+                else if (counter == 3) {
+                    rutInvested += ".";
+                    counter = 0;
+                }
+                counter++;
+            }
+
+            for (var j = rutInvested.length - 1; j >= 0; j--) {
+                if (rutInvested.charAt(rutInvested.length - 1) != ".")
+                    finalRut += rutInvested.charAt(j);
+                else if (j != rutInvested.length - 1)
+                    finalRut += rutInvested.charAt(j);
+
+            }
+            $('#inputRut').val(finalRut.toUpperCase());
+        }        
+    }
+
+
+    function onShowInputBirthDate()
+    {
         $('#inputBirthDate').datetimepicker('show');
     }
 
-    function onClickClean() {
+    function onClickClean()
+    {
         $('#inputRut').val('');
         $('#inputName').val('');
         $('#inputLastName').val('');
@@ -157,29 +215,61 @@
         $('#inputPassword').val('');
     }
 
-    function onValidateFormExample() {
+    function onValidateRut(value)
+    {
+        const isRut = '^([0-9]+-{1}[0-9kK]{1})$';
+        const regularExpression = new RegExp(isRut);
+
+        if (!regularExpression.test(value))
+        {
+            return false;
+        }
+        else
+        {
+            var arrayValue = value.split('-');
+            var rut = arrayValue[0];
+            var digitCheck = arrayValue[1];
+            if (digitCheck == 'K')
+                digitCheck = 'k';
+
+            var M = 0, S = 1;
+            for (; rut; rut = Math.floor(rut / 10))
+                S = (S + rut % 10 * (9 - M++ % 6)) % 11;
+
+            return digitCheck == (S ? S - 1 : 'k');
+        }
+    }
+
+    function onValidateFormExample()
+    {
         var stringMessage = '';
 
         var valInputRut = $('#inputRut').val();
-        if (valInputRut.trim().length == 0){
+        if (valInputRut.trim().length == 0)
+        {
             stringMessage = '- Parámetro Rut no puede estar vacio';
         }
-        else if (valInputRut.trim().length > getMaxValueInputRut()){
+        else if (valInputRut.trim().length > getMaxValueInputRut())
+        {
             stringMessage = '- Parámetro Rut no debe ser mayor a ' + getMaxValueInputRut() + ' caracteres de largo';
         }
-        else if (!onValidateRut(valInputRut)) {
+        else if (!onValidateRut(valInputRut))
+        {
             stringMessage = '- Parámetro Rut no es válido';
         }
 
         var valInputName = $('#inputName').val();
-        if (valInputName.trim().length == 0) {
+        if (valInputName.trim().length == 0)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Name no puede estar vacio';
             else
                 stringMessage = stringMessage + '\n- Parámetro Name no puede estar vacio';
 
-        } else if (valInputName.trim().length > getMaxValueInputName()) {
+        }
+        else if (valInputName.trim().length > getMaxValueInputName())
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Name no debe ser mayor a ' + getMaxValueInputName() + ' caracteres de largo';
@@ -189,14 +279,17 @@
         }
 
         var valInputLastName = $('#inputLastName').val();
-        if (valInputLastName.trim().length == 0) {
+        if (valInputLastName.trim().length == 0)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro LastName no puede estar vacio';
             else
                 stringMessage = stringMessage + '\n- Parámetro LastName no puede estar vacio';
 
-        } else if (valInputLastName.trim().length > getMaxValueInputLastName()) {
+        }
+        else if (valInputLastName.trim().length > getMaxValueInputLastName())
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro LastName no debe ser mayor a ' + getMaxValueInputLastName() + ' caracteres de largo';
@@ -206,18 +299,22 @@
         }
 
         var valInputBirthDate = $('#inputBirthDate').val();
-        if (valInputBirthDate == '') {
+        if (valInputBirthDate == '')
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro BirthDate no puede estar vacio';
             else
                 stringMessage = stringMessage + '\n- Parámetro BirthDate no puede estar vacio';
 
-        } else {
+        }
+        else
+        {
 
             var date = new Date(valInputBirthDate);
             var today = new Date(getMaxDateInputBirthDate());
-            if (date > today) {
+            if (date > today)
+            {
 
                 if (stringMessage.length == 0)
                     stringMessage = '- Parámetro BirthDate no puede ser mayor a la fecha actual';
@@ -229,7 +326,8 @@
         }
 
         var valInputActive = $('input:radio[name=inputActiveRadioOptions]:checked').val();
-        if (valInputActive == undefined) {
+        if (valInputActive == undefined)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Active no esta seleccionado. Debe seleccionar una opcion';
@@ -239,14 +337,17 @@
         }
 
         var valInputPassword = $('#inputPassword').val();
-        if (valInputPassword.trim().length == 0) {
+        if (valInputPassword.trim().length == 0)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Password no puede estar vacio';
             else
                 stringMessage = stringMessage + '\n- Parámetro Password no puede estar vacio';
 
-        } else if (valInputLastName.trim().length > getMaxValueInputPassword()) {
+        }
+        else if (valInputLastName.trim().length > getMaxValueInputPassword())
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Password no debe ser mayor a ' + getMaxValueInputPassword() + ' caracteres de largo';
@@ -255,10 +356,12 @@
 
         }
 
-        if (stringMessage.length == 0) {
+        if (stringMessage.length == 0)
+        {
             return true;
         }
-        else {
+        else
+        {
             swal('Requerido', stringMessage, 'info');
             return false;
         }

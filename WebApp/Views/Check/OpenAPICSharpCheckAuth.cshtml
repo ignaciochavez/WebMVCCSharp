@@ -1,6 +1,6 @@
-﻿@model WebApp.Models.ExampleDeleteModel
+﻿@model WebApp.Models.CheckOpenAPICSharpCheckAuth
 @{
-    ViewBag.Title = "Eliminar";
+    ViewBag.Title = "OpenAPICSharpCheckAuth";
 }
 
 <div style="min-height: 78.3vh;">
@@ -33,27 +33,21 @@
                             <p>@messages</p>
                         }
                     </div>
+
                 </div>
             </div>
         }
-        else if (Model.Delete != null)
+        else if (Model.MessageVOOk != null)
         {
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
-                    @if (Model.Delete.Value)
-                    {
-                        <div class="alert alert-success" role="alert">
-                            <h4 class="alert-heading">Proceso completado</h4>
-                            <p>Registro eliminado correctamente</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-secondary" role="alert">
-                            <h4 class="alert-heading">Proceso no completado</h4>
-                            <p>Registro no ha sido eliminado correctamente</p>
-                        </div>
-                    }
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">@Model.MessageVOOk.Id - @Model.MessageVOOk.Title</h4>
+                        @foreach (var messages in Model.MessageVOOk.Messages)
+                {
+                            <p>@messages</p>
+                        }
+                    </div>
                 </div>
             </div>
         }
@@ -68,10 +62,8 @@
                 </div>
             </div>
         }
-
         <div class="col-md-10 text-right my-auto mx-auto">
-            <h6><a href="@Url.Action("List", "Example")"><i class="fa fa-backward"></i> Volver</a></h6>
+            <h6><a href="@Url.Action("Index", "Home")"><i class="fa fa-backward"></i> Volver</a></h6>
         </div>
     </div>
 </div>
-

@@ -63,6 +63,21 @@ namespace Business.Tool
             return rutDigit;
         }
 
+        public static string OpenAPICSharpNameHeader()
+        {
+            return "API-KEY";
+        }
+
+        public static string OpenAPICSharpValueHeader()
+        {
+            return GetAppSettings("OpenAPICSharpAPIKey");
+        }
+
+        public static string OpenAPICSharpURL()
+        {
+            return GetAppSettings("OpenAPICSharpURL");
+        }
+
         #endregion
 
         #region Validate
@@ -83,6 +98,20 @@ namespace Business.Tool
                 return false;
             }
             return true;
+        }
+
+        public static bool ValidateDateTimeOffset(DateTimeOffset dateTimeOffset)
+        {
+            if (dateTimeOffset == DateTimeOffset.MinValue)
+                return false;
+            else
+                return true;
+        }
+
+        public static bool ValidateBase64String(string base64String)
+        {
+            base64String = base64String.Trim();
+            return (base64String.Length % 4 == 0) && Regex.IsMatch(base64String, @GetAppSettings("IsBase64String"), RegexOptions.None);
         }
 
         #endregion
@@ -162,6 +191,23 @@ namespace Business.Tool
             Task<string> jsonResp = httpResponseMessage.Content.ReadAsStringAsync();
             T obj = JsonConvert.DeserializeObject<T>(jsonResp.Result);
             return obj;
+        }
+        #endregion
+
+        #region Replace
+        public static string ReplaceConventionImageFromBase64String(string base64String)
+        {
+            base64String = base64String.Replace("data:image/bmp;base64,", "");
+            base64String = base64String.Replace("data:image/emf;base64,", "");
+            base64String = base64String.Replace("data:image/exif;base64,", "");
+            base64String = base64String.Replace("data:image/gif;base64,", "");
+            base64String = base64String.Replace("data:image/icon;base64,", "");
+            base64String = base64String.Replace("data:image/jpeg;base64,", "");
+            base64String = base64String.Replace("data:image/jpg;base64,", "");
+            base64String = base64String.Replace("data:image/png;base64,", "");
+            base64String = base64String.Replace("data:image/tiff;base64,", "");
+            base64String = base64String.Replace("data:image/wmf;base64,", "");
+            return base64String;
         }
         #endregion
     }

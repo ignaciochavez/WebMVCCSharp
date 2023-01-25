@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Business.Implementation
 {
-    public static class ExampleImpl
+    public static class HeroeImpl
     {
-        public static Tuple<string, MessageVO, Example> Select(int id)
+        public static Tuple<string, MessageVO, Heroe> Select(int id)
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            Example example = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLExample()}Select?id={id}", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            Heroe heroe = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLHeroe()}Select?id={id}", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -29,19 +29,19 @@ namespace Business.Implementation
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
-                example = Useful.APIJsonDeserializeObject<Example>(httpResponseMessage);
+                heroe = Useful.APIJsonDeserializeObject<Heroe>(httpResponseMessage);
             }
 
-            Tuple<string, MessageVO, Example> tuple = new Tuple<string, MessageVO, Example>(response, messageVO, example);
+            Tuple<string, MessageVO, Heroe> tuple = new Tuple<string, MessageVO, Heroe>(response, messageVO, heroe);
             return tuple;
         }
-        
-        public static Tuple<string, MessageVO, Example> Insert(ExampleInsertDTO exampleInsertDTO)
+
+        public static Tuple<string, MessageVO, Heroe> Insert(HeroeInsertDTO heroeInsertDTO)
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            Example example = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest<ExampleInsertDTO>($"{URLExample()}Insert", exampleInsertDTO, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            Heroe heroe = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest<HeroeInsertDTO>($"{URLHeroe()}Insert", heroeInsertDTO, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -52,19 +52,19 @@ namespace Business.Implementation
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
-                example = Useful.APIJsonDeserializeObject<Example>(httpResponseMessage);
+                heroe = Useful.APIJsonDeserializeObject<Heroe>(httpResponseMessage);
             }
 
-            Tuple<string, MessageVO, Example> tuple = new Tuple<string, MessageVO, Example>(response, messageVO, example);            
+            Tuple<string, MessageVO, Heroe> tuple = new Tuple<string, MessageVO, Heroe>(response, messageVO, heroe);
             return tuple;
         }
 
-        public static Tuple<string, MessageVO, bool?> Update(Example example)
+        public static Tuple<string, MessageVO, bool?> Update(Heroe heroe)
         {
             string response = string.Empty;
             MessageVO messageVO = null;
             bool? update = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIPutRequest<Example>($"{URLExample()}Update", example, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            HttpResponseMessage httpResponseMessage = Useful.APIPutRequest<Heroe>($"{URLHeroe()}Update", heroe, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -87,7 +87,7 @@ namespace Business.Implementation
             string response = string.Empty;
             MessageVO messageVO = null;
             bool? delete = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIDeleteRequest($"{URLExample()}Delete?id={id}", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            HttpResponseMessage httpResponseMessage = Useful.APIDeleteRequest($"{URLHeroe()}Delete?id={id}", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -105,12 +105,12 @@ namespace Business.Implementation
             return tuple;
         }
 
-        public static Tuple<string, MessageVO, List<Example>> List(ExampleListDTO exampleListDTO)
+        public static Tuple<string, MessageVO, List<Heroe>> List(HeroeListDTO heroeListDTO)
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            List<Example> listExample = new List<Example>();
-            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest<ExampleListDTO>($"{URLExample()}List", exampleListDTO, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            List<Heroe> listHeroe = new List<Heroe>();
+            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest<HeroeListDTO>($"{URLHeroe()}List", heroeListDTO, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -121,10 +121,10 @@ namespace Business.Implementation
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
-                listExample = Useful.APIJsonDeserializeObject<List<Example>>(httpResponseMessage);
+                listHeroe = Useful.APIJsonDeserializeObject<List<Heroe>>(httpResponseMessage);
             }
 
-            Tuple<string, MessageVO, List<Example>> tuple = new Tuple<string, MessageVO, List<Example>>(response, messageVO, listExample);
+            Tuple<string, MessageVO, List<Heroe>> tuple = new Tuple<string, MessageVO, List<Heroe>>(response, messageVO, listHeroe);
             return tuple;
         }
 
@@ -133,7 +133,7 @@ namespace Business.Implementation
             string response = string.Empty;
             MessageVO messageVO = null;
             long? count = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLExample()}TotalRecords", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLHeroe()}TotalRecords", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -151,12 +151,12 @@ namespace Business.Implementation
             return tuple;
         }
 
-        public static Tuple<string, MessageVO, ExampleExcelDTO> Excel()
+        public static Tuple<string, MessageVO, HeroeExcelDTO> Excel()
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            ExampleExcelDTO exampleExcelDTO = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest($"{URLExample()}Excel", string.Empty, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            HeroeExcelDTO heroeExcelDTO = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest($"{URLHeroe()}Excel", string.Empty, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -167,19 +167,19 @@ namespace Business.Implementation
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
-                exampleExcelDTO = Useful.APIJsonDeserializeObject<ExampleExcelDTO>(httpResponseMessage);
+                heroeExcelDTO = Useful.APIJsonDeserializeObject<HeroeExcelDTO>(httpResponseMessage);
             }
 
-            Tuple<string, MessageVO, ExampleExcelDTO> tuple = new Tuple<string, MessageVO, ExampleExcelDTO>(response, messageVO, exampleExcelDTO);
+            Tuple<string, MessageVO, HeroeExcelDTO> tuple = new Tuple<string, MessageVO, HeroeExcelDTO>(response, messageVO, heroeExcelDTO);
             return tuple;
         }
 
-        public static Tuple<string, MessageVO, ExamplePDFDTO> PDF()
+        public static Tuple<string, MessageVO, HeroePDFDTO> PDF()
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            ExamplePDFDTO examplePDFDTO = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest($"{URLExample()}PDF", string.Empty, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
+            HeroePDFDTO heroePDFDTO = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIPostRequest($"{URLHeroe()}PDF", string.Empty, Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
             {
                 response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
@@ -190,16 +190,16 @@ namespace Business.Implementation
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
             {
-                examplePDFDTO = Useful.APIJsonDeserializeObject<ExamplePDFDTO>(httpResponseMessage);
+                heroePDFDTO = Useful.APIJsonDeserializeObject<HeroePDFDTO>(httpResponseMessage);
             }
 
-            Tuple<string, MessageVO, ExamplePDFDTO> tuple = new Tuple<string, MessageVO, ExamplePDFDTO>(response, messageVO, examplePDFDTO);
+            Tuple<string, MessageVO, HeroePDFDTO> tuple = new Tuple<string, MessageVO, HeroePDFDTO>(response, messageVO, heroePDFDTO);
             return tuple;
         }
 
-        private static string URLExample()
+        private static string URLHeroe()
         {
-            return $"{Useful.OpenAPICSharpURL()}Example/";
+            return $"{Useful.OpenAPICSharpURL()}Heroe/";
         }
     }
 }

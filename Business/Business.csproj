@@ -50,9 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\ExampleDTO.cs" />
+    <Compile Include="DTO\HeroeDTO.cs" />
     <Compile Include="Entity\Example.cs" />
+    <Compile Include="Entity\Heroe.cs" />
     <Compile Include="Implementation\CheckImpl.cs" />
     <Compile Include="Implementation\ExampleImpl.cs" />
+    <Compile Include="Implementation\HeroeImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tool\ExceptionExtension.cs" />
     <Compile Include="Tool\ContentHTML.cs" />

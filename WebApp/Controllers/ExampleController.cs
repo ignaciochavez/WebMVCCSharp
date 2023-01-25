@@ -149,15 +149,15 @@ namespace WebApp.Controllers
                 Response = string.Empty,
                 MessageVO = null,
                 Example = null,
-                Updated = null,
-                UrlButton = string.Empty,
-                ValueButton = string.Empty
+                Updated = null
             };
             MessageVO messageVO = new MessageVO();
             Tuple<string, MessageVO, bool?> tupleUpdateMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             Tuple<string, MessageVO, Example> tupleInsertMethod = new Tuple<string, MessageVO, Example>(null, null, null);
             try
             {
+                inputRut = inputRut.Replace(".", "");
+
                 if (string.IsNullOrWhiteSpace(inputRut))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("emptyParameters").Replace("{0}", "Rut"));
                 else if (inputRut.Trim().Length > 12)
@@ -174,17 +174,16 @@ namespace WebApp.Controllers
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("emptyParameters").Replace("{0}", "LastName"));
                 else if (inputLastName.Trim().Length > 45)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("maximunParameterLengthCharacter").Replace("{0}", "LastName").Replace("{1}", "45"));
-
-                DateTime dateTime;
+                
                 DateTimeOffset birthDate = new DateTimeOffset();
-                bool isDate = DateTime.TryParseExact(inputBirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+                bool isDate = DateTimeOffset.TryParseExact(inputBirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate);
                 if (!isDate)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("invalidFormatParameters").Replace("{0}", "BirthDate"));
+                else if (!Useful.ValidateDateTimeOffset(birthDate))
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("dateTimeParametersNoInitialized").Replace("{0}", "BirthDate"));
                 else if (birthDate > DateTimeOffset.Now)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("dateTimeParameterGreaterThanTheCurrentDate").Replace("{0}", "BirthDate"));
-                else
-                    birthDate = new DateTimeOffset(dateTime);
-
+                
                 if (string.IsNullOrWhiteSpace(inputActiveRadioOptions))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("parameterNotSelected").Replace("{0}", "Active"));
 
@@ -195,13 +194,14 @@ namespace WebApp.Controllers
 
                 if (messageVO.Messages.Count() > 0)
                 {
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
                     exampleConfirmModel.MessageVO = messageVO;
                 }
                 else
                 {
                     if (id > 0)
                     {
-                        tupleUpdateMethod = ExampleImpl.Update(new Example() { Id = id, Rut = inputRut.Trim(), Name = inputName, LastName = inputLastName, BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
+                        tupleUpdateMethod = ExampleImpl.Update(new Example() { Id = id, Rut = inputRut.Trim(), Name = inputName.Trim(), LastName = inputLastName.Trim(), BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
 
                         if (!string.IsNullOrWhiteSpace(tupleUpdateMethod.Item1))
                             exampleConfirmModel.Response = tupleUpdateMethod.Item1;
@@ -212,7 +212,7 @@ namespace WebApp.Controllers
                     }
                     else
                     {
-                        tupleInsertMethod = ExampleImpl.Insert(new ExampleInsertDTO() { Rut = inputRut.Trim(), Name = inputName, LastName = inputLastName, BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
+                        tupleInsertMethod = ExampleImpl.Insert(new ExampleInsertDTO() { Rut = inputRut.Trim(), Name = inputName.Trim(), LastName = inputLastName.Trim(), BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
 
                         if (!string.IsNullOrWhiteSpace(tupleInsertMethod.Item1))
                             exampleConfirmModel.Response = tupleInsertMethod.Item1;

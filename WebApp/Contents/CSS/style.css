@@ -11,10 +11,12 @@ html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     background-color: black;
 }
+
 body {
     margin: 0;
     margin-bottom: 40px;
 }
+
 footer {
     bottom: 0px;
     color: white;

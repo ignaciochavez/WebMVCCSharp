@@ -1,21 +1,20 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
     @Styles.Render("~/Contents/CSS/style.css")
     @Styles.Render("~/Contents/CSS/bootstrap.css")
     @Styles.Render("~/Contents/FontAwesome/css/font-awesome.css")
     @Styles.Render("~/Contents/CSS/jquery.datetimepicker-2.5.20.css")    
-
+        
     @Scripts.Render("~/Contents/JS/jquery-3.6.0.js")
+    @Scripts.Render("~/Contents/JS/popper-1.16.1.min.js")
     @Scripts.Render("~/Contents/JS/bootstrap.js")
-    @Scripts.Render("~/Contents/JS/useful.js")
     @Scripts.Render("~/Contents/JS/jquery.datetimepicker.full-2.5.20.js")
-    @Scripts.Render("~/Contents/JS/sweetalert-1.min.js")
+    @Scripts.Render("~/Contents/JS/sweetalert-1.min.js")    
     @RenderSection("scripts", required: false)
+    <title>@ViewBag.Title</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -63,16 +62,22 @@
                             <a class="dropdown-item" href="@Url.Action("Insert", "Example")">Insertar</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Example")">Listar</a>
                         </div>
-                    </li>
-                    @*
+                    </li>                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownHeroe" data-toggle="dropdown" aria-expanded="false">Heroe</a>
                         <div class="dropdown-menu" aria-labelledby="dropdownHeroe">
                             <a class="dropdown-item" href="@Url.Action("Insert", "Heroe")">Insertar</a>
                             <a class="dropdown-item" href="@Url.Action("List", "Heroe")">Listar</a>
                         </div>
-                    </li>
-                    *@
+                    </li>    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownCheck" data-toggle="dropdown" aria-expanded="false">Check</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownCheck">
+                            <a class="dropdown-item" href="@Url.Action("Check", "Check")">Check</a>
+                            <a class="dropdown-item" href="@Url.Action("OpenAPICSharpCheck", "Check")">OpenAPICSharp Check</a>
+                            <a class="dropdown-item" href="@Url.Action("OpenAPICSharpCheckAuth", "Check")">OpenAPICSharp CheckAuth</a>
+                        </div>
+                    </li>                    
                 </ul>
             </div>
         </div>

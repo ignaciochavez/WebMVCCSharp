@@ -1,0 +1,68 @@
+﻿@model WebApp.Models.CheckCheckModel
+@{
+    ViewBag.Title = "Check";
+}
+
+<div style="min-height: 78.3vh;">
+    <div class="mt-3 pb-3 container" style="border: 3px solid rgba(50, 50, 50, 0.3); border-radius: 6px;">
+        <div class="row ">
+            <div class="col-md-6 text-center my-auto mx-auto">
+                <h1 class="mt-3">@ViewBag.Title</h1>
+            </div>
+        </div>
+        
+        @if (Model.MessageVO != null)
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    @if (Model.HttpStatusCode == HttpStatusCode.OK)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">@Model.MessageVO.Id - @Model.MessageVO.Title</h4>
+                            @foreach (var messages in Model.MessageVO.Messages)
+                            {
+                                <p>@messages</p>
+                            }
+                        </div>
+                    }
+                    else if (Model.HttpStatusCode == HttpStatusCode.BadRequest)
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">@Model.MessageVO.Id - @Model.MessageVO.Title</h4>
+                            @foreach (var messages in Model.MessageVO.Messages)
+                            {
+                                <p>@messages</p>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">@Model.MessageVO.Id - @Model.MessageVO.Title</h4>
+                            @foreach (var messages in Model.MessageVO.Messages)
+                            {
+                                <p>@messages</p>
+                            }
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    <div class="alert alert-primary" role="alert">
+                        <h4 class="alert-heading">Sin proceso trabajado</h4>
+                        <p>No se han realizado trabajos internos</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-10 text-right my-auto mx-auto">
+            <h6><a href="@Url.Action("Index", "Home")"><i class="fa fa-backward"></i> Volver</a></h6>
+        </div>
+    </div>
+</div>

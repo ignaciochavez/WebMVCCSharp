@@ -1,0 +1,314 @@
+﻿@model Business.Entity.Heroe
+
+<style type="text/css">
+    .fa-custom {
+        position: absolute;
+        right: 25px;
+        top: 11px;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+</style>
+
+@using (Html.BeginForm("ConfirmFormHeroe", "Heroe", FormMethod.Post, new { @onsubmit = "return onValidateFormHeroe()", @class = "col-md-10 mt-3", @style = "padding-bottom: 40px;" }))
+{
+    @Html.Hidden("id", (Model != null) ? Model.Id : 0)
+
+    <div class="card h-100">
+        @if (Model != null)
+        {
+            <img id="imgBase64String" src="@Model.ImgBase64String" class="card-img-top" alt="@Model.Name" style="display: block;">
+        }
+        else
+        {
+            <img id="imgBase64String" src="" class="card-img-top"  alt="" style="display: none;" />
+        }        
+        <div class="card-body">
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-4">
+                    @Html.Label("inputName", "Name", new { @class = "col-form-label" })
+                </div>
+                <div class="col-sm-8">
+                    @Html.TextBox("inputName", (Model != null) ? Model.Name : "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-4">
+                    @Html.Label("inputHome", "Home", new { @class = "col-form-label" })
+                </div>
+                <div class="col-sm-8">
+                    @Html.TextBox("inputHome", (Model != null) ? Model.Home : "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-4">
+                    @Html.Label("inputAppearance", "Appearance", new { @class = "col-form-label" })
+                </div>
+                <div class="col-sm-8">
+                    @Html.TextBox("inputAppearance", (Model != null) ? Model.Appearance.ToString("yyyy-MM-dd") : "", new { @class = "form-control" })
+                    <i class="fa fa-custom fa-calendar" onclick="showInputAppearance()"></i>
+                </div>
+            </div>
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-4">
+                    @Html.Label("inputDescription", "Description", new { @class = "col-form-label" })
+                </div>
+                <div class="col-sm-8">
+                    @Html.TextArea("inputDescription", (Model != null) ? Model.Description : "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-4">
+                    @Html.Label("inputImgBase64String", "ImgBase64String", new { @class = "col-form-label" })
+                </div>
+                <div class="col-sm-8">
+                   @Html.TextArea("inputImgBase64String", (Model != null) ? Model.ImgBase64String : "", new { @class = "form-control", @style = "display: block;" })
+                </div>
+            </div>
+            <div class="justify-content-center row form-group">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-outline-secondary btn-block" onclick="onClickDisplayImage()"><i class="fa fa-picture-o">Visualizar Imagen</i></button>
+                </div>
+            </div>
+            <div class="justify-content-center row form-group" style="margin-top: 40px; border: 1px solid rgba(0,0,0,.125);">
+            </div>
+            <div class="justify-content-center row form-group" style="margin-top: 40px; margin-bottom: 40px;">
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-outline-secondary btn-block" onclick="onClickClean()"><i class="fa fa-eraser">Limpiar</i></button>
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" class="btn btn-outline-success btn-block">
+                        @if (Model != null)
+                {
+                            <i class="fa fa-refresh">Actualizar</i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-check">Insertar</i>
+                        }
+                    </button>
+                </div>
+                <div class="col-lg-4">
+                    <a class="btn btn-outline-primary btn-block" href="@Url.Action("List","Heroe")"><i class="fa fa-backward">Volver</i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    window.onload = function ()
+    {
+        $.datetimepicker.setLocale('es');
+
+        $('#inputAppearance').datetimepicker(
+            {
+            minDate: getMinDateInputAppearance(),
+            maxDate: getMaxDateInputAppearance(),
+            timepicker: false,
+            format: 'Y-m-d'
+            }
+        );
+
+        $('#inputName').attr('maxlength', getMaxValueInputName());
+        $('#inputHome').attr('maxlength', getMaxValueInputHome());
+        $('#inputDescription').attr('maxlength', getMaxValueInputDescription());
+    }
+
+    function getMaxValueInputName()
+    {
+        return 45;
+    }
+
+    function getMaxValueInputHome()
+    {
+        return 35;
+    }
+
+    function getMaxValueInputDescription()
+    {
+        return 450;
+    }
+
+    function getMinDateInputAppearance()
+    {
+        var date = '1900-01-01';
+        return date;
+    }
+
+    function getMaxDateInputAppearance()
+    {
+        var date = '@DateTime.Now.ToString("yyyy-MM-dd")';
+        return date;
+    }
+
+    function showInputAppearance()
+    {
+        $('#inputAppearance').datetimepicker('show');
+    }
+
+    function onClickDisplayImage()
+    {
+        var valInputImgBase64String = $('#inputImgBase64String').val();
+
+        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
+        var convention = arrayValInputImgBase64String[0];
+
+        if (!convention.includes('data:image/bmp;base64') && !convention.includes('data:image/emf;base64') && !convention.includes('data:image/exif;base64')
+            && !convention.includes('data:image/gif;base64') && !convention.includes('data:image/icon;base64') && !convention.includes('data:image/jpeg;base64')
+            && !convention.includes('data:image/jpg;base64') && !convention.includes('data:image/png;base64') && !convention.includes('data:image/tiff;base64')
+            && !convention.includes('data:image/wmf;base64'))
+        {
+            swal('Requerido', '- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf', 'info');
+            return;
+        }
+
+        if (valInputImgBase64String.trim().length == 0)
+        {
+            $('#imgBase64String').css('display', 'none');
+            $('#imgBase64String').attr('src', '');
+            $('#imgBase64String').attr('alt', '');
+        }
+        else
+        {
+            var valInputName = $('#inputName').val();
+            if (valInputName.trim().length == 0)
+            {
+                $('#imgBase64String').attr('alt', '');
+            }
+            else
+            {
+                $('#imgBase64String').attr('alt', valInputName.trim());
+            }
+
+            $('#imgBase64String').css('display', 'block');
+            $('#imgBase64String').attr('src', valInputImgBase64String.trim());
+        }
+    }
+
+    function onClickClean()
+    {
+        $('#inputName').val('');
+        $('#inputHome').val('');
+        $('#inputAppearance').val('');
+        $('#inputDescription').val('');
+        $('#inputImgBase64String').val('');
+        $('#imgBase64String').css('display', 'none');
+        $('#imgBase64String').attr('src', '');
+    }
+
+    function onValidateFormHeroe()
+    {
+        var stringMessage = '';
+        
+        var valInputName = $('#inputName').val();
+        if (valInputName.trim().length == 0)
+        {
+            stringMessage = '- Parámetro Name no puede estar vacio';
+        }
+        else if (valInputName.trim().length > getMaxValueInputName())
+        {
+            stringMessage = '- Parámetro Name no debe ser mayor a ' + getMaxValueInputName() + ' caracteres de largo';
+        }
+
+        var valInputHome = $('#inputHome').val();
+        if (valInputHome.trim().length == 0)
+        {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Home no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Home no puede estar vacio';
+
+        }
+        else if (valInputHome.trim().length > getMaxValueInputHome())
+        {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Home no debe ser mayor a ' + getMaxValueInputHome() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Home no debe ser mayor a ' + getMaxValueInputHome() + ' caracteres de largo';
+
+        }
+
+        var valInputAppearancee = $('#inputAppearance').val();
+        if (valInputAppearancee == '')
+        {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Appearance no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Appearance no puede estar vacio';
+
+        }
+        else
+        {
+
+            var date = new Date(valInputAppearancee);
+            var today = new Date(getMaxDateInputAppearance());
+            if (date > today)
+            {
+
+                if (stringMessage.length == 0)
+                    stringMessage = '- Parámetro Appearance no puede ser mayor a la fecha actual';
+                else
+                    stringMessage = stringMessage + '\n- Parámetro Appearance no puede ser mayor a la fecha actual';
+
+            }
+
+        }
+
+        var valInputDescription = $('#inputDescription').val();
+        if (valInputDescription.trim().length == 0) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Description no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Description no puede estar vacio';
+
+        }
+        else if (valInputDescription.trim().length > getMaxValueInputDescription()) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Description no debe ser mayor a ' + getMaxValueInputDescription() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Description no debe ser mayor a ' + getMaxValueInputDescription() + ' caracteres de largo';
+
+        }
+
+        var valInputImgBase64String = $('#inputImgBase64String').val();
+        if (valInputImgBase64String.trim().length == 0) {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro ImgBase64String no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro ImgBase64String no puede estar vacio';
+
+        }
+
+        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
+        var convention = arrayValInputImgBase64String[0];
+
+        if (!convention.includes('data:image/bmp;base64') && !convention.includes('data:image/emf;base64') && !convention.includes('data:image/exif;base64')
+            && !convention.includes('data:image/gif;base64') && !convention.includes('data:image/icon;base64') && !convention.includes('data:image/jpeg;base64')
+            && !convention.includes('data:image/jpg;base64') && !convention.includes('data:image/png;base64') && !convention.includes('data:image/tiff;base64')
+            && !convention.includes('data:image/wmf;base64'))
+        {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf';
+            else
+                stringMessage = stringMessage + '\n- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf';
+        }
+
+        if (stringMessage.length == 0) {
+            return true;
+        }
+        else {
+            swal('Requerido', stringMessage, 'info');
+            return false;
+        }
+    }
+</script>

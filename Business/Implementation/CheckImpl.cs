@@ -11,42 +11,55 @@ namespace Business.Implementation
 {
     public static class CheckImpl
     {
-        private static string OpenAPICSharpUrl = $"{Useful.GetAppSettings("OpenAPICSharpURL")}Check/";
-
-        public static Tuple<string, MessageVO> Check()
+        public static Tuple<string, MessageVO, MessageVO> Check()
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{OpenAPICSharpUrl}Check");
-            if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
+            MessageVO messageVOOk = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLCheck()}Check");
+            if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError && httpResponseMessage.StatusCode != HttpStatusCode.BadRequest)
             {
-                response = Useful.APIJsonDeserializeObject<string>(httpResponseMessage);
+                response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
             }
-            else if (httpResponseMessage.StatusCode == HttpStatusCode.OK || httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError)
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.BadRequest || httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError)
             {
                 messageVO = Useful.APIJsonDeserializeObject<MessageVO>(httpResponseMessage);
             }
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                messageVOOk = Useful.APIJsonDeserializeObject<MessageVO>(httpResponseMessage);
+            }
 
-            Tuple<string, MessageVO> tuple = new Tuple<string, MessageVO>(response, messageVO);
+            Tuple<string, MessageVO, MessageVO> tuple = new Tuple<string, MessageVO, MessageVO>(response, messageVO, messageVOOk);
             return tuple;
         }
 
-        public static Tuple<string, MessageVO> CheckAuth()
+        public static Tuple<string, MessageVO, MessageVO> CheckAuth()
         {
             string response = string.Empty;
             MessageVO messageVO = null;
-            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{OpenAPICSharpUrl}CheckAuth", "API-KEY", Useful.GetAppSettings("OpenAPICSharpAPIKey"));
+            MessageVO messageVOOk = null;
+            HttpResponseMessage httpResponseMessage = Useful.APIGetRequest($"{URLCheck()}CheckAuth", Useful.OpenAPICSharpNameHeader(), Useful.OpenAPICSharpValueHeader());
             if (httpResponseMessage.StatusCode != HttpStatusCode.OK && httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError && httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized)
             {
-                response = Useful.APIJsonDeserializeObject<string>(httpResponseMessage);
+                response = Useful.APIJsonDeserializeObjectToSampleString(httpResponseMessage);
             }
-            else if (httpResponseMessage.StatusCode == HttpStatusCode.OK || httpResponseMessage.StatusCode != HttpStatusCode.InternalServerError || httpResponseMessage.StatusCode != HttpStatusCode.Unauthorized)
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError || httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
             {
                 messageVO = Useful.APIJsonDeserializeObject<MessageVO>(httpResponseMessage);
             }
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                messageVOOk = Useful.APIJsonDeserializeObject<MessageVO>(httpResponseMessage);
+            }
 
-            Tuple<string, MessageVO> tuple = new Tuple<string, MessageVO>(response, messageVO);
+            Tuple<string, MessageVO, MessageVO> tuple = new Tuple<string, MessageVO, MessageVO>(response, messageVO, messageVOOk);
             return tuple;
+        }
+
+        private static string URLCheck()
+        {
+            return $"{Useful.OpenAPICSharpURL()}Check/";
         }
     }
 }
