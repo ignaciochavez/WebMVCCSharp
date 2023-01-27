@@ -26,6 +26,13 @@ namespace Business.Tool
             return ConfigurationManager.AppSettings[keyWebConfig];
         }
 
+        public static string GetPngToBase64String(string path)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(path);
+            string base64String = Convert.ToBase64String(imageBytes);
+            return String.Format("data:image/png;base64,{0}", base64String);
+        }
+
         public static int GetPageSizeMaximun()
         {
             int pageSixeMaximun = Convert.ToInt32(Useful.GetAppSettings("PageSizeMaximun"));

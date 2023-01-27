@@ -15,6 +15,7 @@ namespace WebApp.Controllers
     public class HeroeController : Controller
     {
         ContentHTML contentHTML = new ContentHTML();
+        MessageVO messageVO = new MessageVO();
 
         [HttpGet]
         public ActionResult Insert()
@@ -23,7 +24,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult Update(int? Id)
+        public ActionResult Update(int? id = 0)
         {
             HeroeUpdateModel heroeUpdateModel = new HeroeUpdateModel()
             {
@@ -31,13 +32,22 @@ namespace WebApp.Controllers
                 MessageVO = null,
                 Heroe = null
             };
-
             Tuple<string, MessageVO, Heroe> tupleSelectMethod = new Tuple<string, MessageVO, Heroe>(null, null, null);
             try
             {
-                if (Id != null && Id > 0)
+                if (id == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "id"));
+                else if (id.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "id"));
+
+                if (messageVO.Messages.Count() > 0)
                 {
-                    tupleSelectMethod = HeroeImpl.Select(Id.Value);
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    heroeUpdateModel.MessageVO = messageVO;
+                }
+                else if (id.Value > 0)
+                {
+                    tupleSelectMethod = HeroeImpl.Select(id.Value);
 
                     if (!string.IsNullOrWhiteSpace(tupleSelectMethod.Item1))
                         heroeUpdateModel.Response = tupleSelectMethod.Item1;
@@ -55,7 +65,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id = 0)
         {
             HeroeDeleteModel heroeDeleteModel = new HeroeDeleteModel()
             {
@@ -66,14 +76,27 @@ namespace WebApp.Controllers
             Tuple<string, MessageVO, bool?> tupleDeleteMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             try
             {
-                tupleDeleteMethod = HeroeImpl.Delete(id);
+                if (id == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "id"));
+                else if (id.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "id"));
 
-                if (!string.IsNullOrWhiteSpace(tupleDeleteMethod.Item1))
-                    heroeDeleteModel.Response = tupleDeleteMethod.Item1;
-                else if (tupleDeleteMethod.Item2 != null)
-                    heroeDeleteModel.MessageVO = tupleDeleteMethod.Item2;
-                else if (tupleDeleteMethod.Item3 != null)
-                    heroeDeleteModel.Delete = tupleDeleteMethod.Item3;
+                if (messageVO.Messages.Count() > 0)
+                {
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    heroeDeleteModel.MessageVO = messageVO;
+                }
+                else if (id.Value > 0)
+                {
+                    tupleDeleteMethod = HeroeImpl.Delete(id.Value);
+
+                    if (!string.IsNullOrWhiteSpace(tupleDeleteMethod.Item1))
+                        heroeDeleteModel.Response = tupleDeleteMethod.Item1;
+                    else if (tupleDeleteMethod.Item2 != null)
+                        heroeDeleteModel.MessageVO = tupleDeleteMethod.Item2;
+                    else if (tupleDeleteMethod.Item3 != null)
+                        heroeDeleteModel.Delete = tupleDeleteMethod.Item3;
+                }                
             }
             catch (Exception ex)
             {
@@ -95,44 +118,45 @@ namespace WebApp.Controllers
             Tuple<string, MessageVO, long?> tupleCountMethod = new Tuple<string, MessageVO, long?>(null, null, null);
             try
             {
-                heroeListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
-
                 if (pageIndex == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "pageIndex"));
+                else if (pageIndex.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "pageIndex"));
+
+                if (messageVO.Messages.Count() > 0)
                 {
-                    tupleListMethod = HeroeImpl.List(new HeroeListDTO() { PageIndex = 0, PageSize = heroeListModel.PageSizeMaximun });
-                }
-                else if (pageIndex < 0)
-                {
-                    pageIndex = 1;
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    heroeListModel.MessageVO.Add(messageVO);
                 }
                 else
                 {
+                    heroeListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
                     tupleListMethod = HeroeImpl.List(new HeroeListDTO() { PageIndex = pageIndex.Value, PageSize = heroeListModel.PageSizeMaximun });
-                }
 
-                if (tupleListMethod.Item3 == null || (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0))
-                    heroeListModel.PageIndex = 1;
-                else
-                    heroeListModel.PageIndex = pageIndex.Value;
+                    if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0)
+                        heroeListModel.PageIndex = 0;
+                    else
+                        heroeListModel.PageIndex = pageIndex.Value;
 
-                if (!string.IsNullOrWhiteSpace(tupleListMethod.Item1))
-                    heroeListModel.Response.Add(tupleListMethod.Item1);
-                else if (tupleListMethod.Item2 != null)
-                    heroeListModel.MessageVO.Add(tupleListMethod.Item2);
-                else if (tupleListMethod.Item3 != null)
-                    heroeListModel.Heroe = tupleListMethod.Item3;
+                    if (!string.IsNullOrWhiteSpace(tupleListMethod.Item1))
+                        heroeListModel.Response.Add(tupleListMethod.Item1);
+                    else if (tupleListMethod.Item2 != null)
+                        heroeListModel.MessageVO.Add(tupleListMethod.Item2);
+                    else if (tupleListMethod.Item3 != null)
+                        heroeListModel.Heroe = tupleListMethod.Item3;
 
-                if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() > 0)
-                {
-                    tupleCountMethod = HeroeImpl.TotalRecords();
+                    if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() > 0)
+                    {
+                        tupleCountMethod = HeroeImpl.TotalRecords();
 
-                    if (!string.IsNullOrWhiteSpace(tupleCountMethod.Item1))
-                        heroeListModel.Response.Add(tupleCountMethod.Item1);
-                    else if (tupleCountMethod.Item2 != null)
-                        heroeListModel.MessageVO.Add(tupleCountMethod.Item2);
-                    else if (tupleCountMethod.Item3 != null)
-                        heroeListModel.Count = tupleCountMethod.Item3;
-                }
+                        if (!string.IsNullOrWhiteSpace(tupleCountMethod.Item1))
+                            heroeListModel.Response.Add(tupleCountMethod.Item1);
+                        else if (tupleCountMethod.Item2 != null)
+                            heroeListModel.MessageVO.Add(tupleCountMethod.Item2);
+                        else if (tupleCountMethod.Item3 != null)
+                            heroeListModel.Count = tupleCountMethod.Item3;
+                    }
+                }                
             }
             catch (Exception ex)
             {
@@ -151,11 +175,13 @@ namespace WebApp.Controllers
                 Heroe = null,
                 Updated = null
             };
-            MessageVO messageVO = new MessageVO();
             Tuple<string, MessageVO, bool?> tupleUpdateMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             Tuple<string, MessageVO, Heroe> tupleInsertMethod = new Tuple<string, MessageVO, Heroe>(null, null, null);
             try
             {
+                if (id < 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parameterMustBeGreaterThanOrEqualToZero").Replace("{0}", "id"));
+
                 if (string.IsNullOrWhiteSpace(inputName))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("emptyParameters").Replace("{0}", "Name"));
                 else if (inputName.Trim().Length > 45)
@@ -230,7 +256,6 @@ namespace WebApp.Controllers
                             heroeConfirmModel.Heroe = tupleInsertMethod.Item3;
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -256,13 +281,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadExcel()
         {
-            Tuple<string, MessageVO, HeroeExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, HeroeExcelDTO>(null, null, null);
             HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel()
             {
                 Response = string.Empty,
                 MessageVO = null
             };
-
+            Tuple<string, MessageVO, HeroeExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, HeroeExcelDTO>(null, null, null);
             try
             {
                 tupleExcelMethod = HeroeImpl.Excel();
@@ -286,12 +310,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadPDF()
         {
-            Tuple<string, MessageVO, HeroePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, HeroePDFDTO>(null, null, null);
             HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel()
             {
                 Response = string.Empty,
                 MessageVO = null
             };
+            Tuple<string, MessageVO, HeroePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, HeroePDFDTO>(null, null, null);
             try
             {
                 tuplePDFMethod = HeroeImpl.PDF();

@@ -144,24 +144,55 @@
         return date;
     }
 
-    function showInputAppearance()
+    function notIncludeConventionsInputImgBase64String(value)
     {
-        $('#inputAppearance').datetimepicker('show');
-    }
-
-    function onClickDisplayImage()
-    {
-        var valInputImgBase64String = $('#inputImgBase64String').val();
-
-        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
-        var convention = arrayValInputImgBase64String[0];
+        var arrayValue = value.split(',');
+        var convention = arrayValue[0].toLowerCase();
 
         if (!convention.includes('data:image/bmp;base64') && !convention.includes('data:image/emf;base64') && !convention.includes('data:image/exif;base64')
             && !convention.includes('data:image/gif;base64') && !convention.includes('data:image/icon;base64') && !convention.includes('data:image/jpeg;base64')
             && !convention.includes('data:image/jpg;base64') && !convention.includes('data:image/png;base64') && !convention.includes('data:image/tiff;base64')
             && !convention.includes('data:image/wmf;base64'))
         {
-            swal('Requerido', '- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf', 'info');
+            return 'Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf';
+        }
+        else
+        {
+            return '';
+        }
+    }
+
+    function validateBase64String(value)
+    {       
+        const isBase64String = '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$';
+        const regularExpression = new RegExp(isBase64String);
+        if (!regularExpression.test(value))
+            return 'Parámetro ImgBase64String no es válido';
+        else
+            return '';
+    }
+    
+    function showInputAppearance()
+    {
+        $('#inputAppearance').datetimepicker('show');
+    }
+    
+    function onClickDisplayImage()
+    {
+        var valInputImgBase64String = $('#inputImgBase64String').val();
+
+        var notIncludeConventions = notIncludeConventionsInputImgBase64String(valInputImgBase64String);
+        if (notIncludeConventions.length > 0)
+        {
+            swal('Requerido', '- ' + notIncludeConventions, 'info');
+            return;
+        }
+
+        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
+        var isBase64String = validateBase64String(arrayValInputImgBase64String[1]);
+        if (isBase64String.length > 0)
+        {
+            swal('Requerido', '- ' + isBase64String, 'info');
             return;
         }
 
@@ -261,7 +292,8 @@
         }
 
         var valInputDescription = $('#inputDescription').val();
-        if (valInputDescription.trim().length == 0) {
+        if (valInputDescription.trim().length == 0)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Description no puede estar vacio';
@@ -269,7 +301,8 @@
                 stringMessage = stringMessage + '\n- Parámetro Description no puede estar vacio';
 
         }
-        else if (valInputDescription.trim().length > getMaxValueInputDescription()) {
+        else if (valInputDescription.trim().length > getMaxValueInputDescription())
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro Description no debe ser mayor a ' + getMaxValueInputDescription() + ' caracteres de largo';
@@ -279,7 +312,8 @@
         }
 
         var valInputImgBase64String = $('#inputImgBase64String').val();
-        if (valInputImgBase64String.trim().length == 0) {
+        if (valInputImgBase64String.trim().length == 0)
+        {
 
             if (stringMessage.length == 0)
                 stringMessage = '- Parámetro ImgBase64String no puede estar vacio';
@@ -288,19 +322,26 @@
 
         }
 
-        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
-        var convention = arrayValInputImgBase64String[0];
-
-        if (!convention.includes('data:image/bmp;base64') && !convention.includes('data:image/emf;base64') && !convention.includes('data:image/exif;base64')
-            && !convention.includes('data:image/gif;base64') && !convention.includes('data:image/icon;base64') && !convention.includes('data:image/jpeg;base64')
-            && !convention.includes('data:image/jpg;base64') && !convention.includes('data:image/png;base64') && !convention.includes('data:image/tiff;base64')
-            && !convention.includes('data:image/wmf;base64'))
+        var notIncludeConventions = notIncludeConventionsInputImgBase64String(valInputImgBase64String);
+        if (notIncludeConventions.length > 0)
         {
 
             if (stringMessage.length == 0)
-                stringMessage = '- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf';
+                stringMessage = '- ' + notIncludeConventions;
             else
-                stringMessage = stringMessage + '\n- Parámetro ImgBase64String no es válido. El formato debe ser bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf';
+                stringMessage = stringMessage + '\n- ' + notIncludeConventions;
+
+        }
+
+        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
+        var isBase64String = validateBase64String(arrayValInputImgBase64String[1]);
+        if (isBase64String.length > 0)
+        {
+
+            if (stringMessage.length == 0)
+                stringMessage = '- ' + isBase64String;
+            else
+                stringMessage = stringMessage + '\n- ' + isBase64String;
         }
 
         if (stringMessage.length == 0) {

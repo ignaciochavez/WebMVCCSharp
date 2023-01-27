@@ -18,6 +18,8 @@ Habilitar Sitio web IIS
 
 ### Instalación 🔧
 
+Publicar solucion desde visual studio y mover compilado a carpeta que leera el IIS
+
 Habilitar directorio y sitio web IIS
 
 ## Ejecutando las pruebas ⚙️
@@ -35,6 +37,7 @@ http://localhost:51485/Home
 * [Bootstrap](https://getbootstrap.com/) - Framework para el uso de bootstrap en el HTML
 * [jQuery](https://jquery.com/) - Framework para la manipulación y uso de datos en el HTML
 * [jQuery datetimepicker](https://xdsoft.net/jqplugins/datetimepicker/) - Framework para la manipulación y uso de datos fecha hora en el HTML
+* [Popper](https://popper.js.org/) - Framework para administrar tus poppers en el HTML
 * [SweetAlert](https://sweetalert.js.org/guides/) - Framework para la presentacion de mensajes en el HTML
 * [FontAwesome](https://fontawesome.com/v4/icons/) - Framework para la presentacion de iconos en el HTML
 

@@ -192,6 +192,7 @@
     <Content Include="Contents\JS\sweetalert-1.min.js" />
     <Content Include="Contents\JS\useful.js" />
     <Content Include="Contents\Useful\Messages.html" />
+    <Content Include="Contents\web-64.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Contents\CSS\bootstrap.css.map" />

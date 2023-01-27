@@ -15,7 +15,8 @@ namespace WebApp.Controllers
     public class ExampleController : Controller
     {
         ContentHTML contentHTML = new ContentHTML();
-        
+        MessageVO messageVO = new MessageVO();
+
         [HttpGet]
         public ActionResult Insert()
         {            
@@ -23,7 +24,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult Update(int? Id)
+        public ActionResult Update(int? id = 0)
         {
             ExampleUpdateModel exampleUpdateModel = new ExampleUpdateModel()
             {
@@ -35,9 +36,19 @@ namespace WebApp.Controllers
             Tuple<string, MessageVO, Example> tupleSelectMethod = new Tuple<string, MessageVO, Example>(null, null, null);
             try
             {
-                if (Id != null && Id > 0)
+                if (id == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "id"));
+                else if (id.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "id"));
+
+                if (messageVO.Messages.Count() > 0)
                 {
-                    tupleSelectMethod = ExampleImpl.Select(Id.Value);
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    exampleUpdateModel.MessageVO = messageVO;
+                }
+                else if (id.Value > 0)
+                {
+                    tupleSelectMethod = ExampleImpl.Select(id.Value);
 
                     if (!string.IsNullOrWhiteSpace(tupleSelectMethod.Item1))
                         exampleUpdateModel.Response = tupleSelectMethod.Item1;
@@ -55,7 +66,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id = 0)
         {
             ExampleDeleteModel exampleDeleteModel = new ExampleDeleteModel()
             {
@@ -66,14 +77,27 @@ namespace WebApp.Controllers
             Tuple<string, MessageVO, bool?> tupleDeleteMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             try
             {
-                tupleDeleteMethod = ExampleImpl.Delete(id);
+                if (id == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "id"));
+                else if (id.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "id"));
 
-                if (!string.IsNullOrWhiteSpace(tupleDeleteMethod.Item1))
-                    exampleDeleteModel.Response = tupleDeleteMethod.Item1;
-                else if (tupleDeleteMethod.Item2 != null)
-                    exampleDeleteModel.MessageVO = tupleDeleteMethod.Item2;
-                else if (tupleDeleteMethod.Item3 != null)
-                    exampleDeleteModel.Delete = tupleDeleteMethod.Item3;
+                if (messageVO.Messages.Count() > 0)
+                {
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    exampleDeleteModel.MessageVO = messageVO;
+                }
+                else if (id.Value > 0)
+                {
+                    tupleDeleteMethod = ExampleImpl.Delete(id.Value);
+
+                    if (!string.IsNullOrWhiteSpace(tupleDeleteMethod.Item1))
+                        exampleDeleteModel.Response = tupleDeleteMethod.Item1;
+                    else if (tupleDeleteMethod.Item2 != null)
+                        exampleDeleteModel.MessageVO = tupleDeleteMethod.Item2;
+                    else if (tupleDeleteMethod.Item3 != null)
+                        exampleDeleteModel.Delete = tupleDeleteMethod.Item3;
+                }                
             }
             catch (Exception ex)
             {
@@ -95,43 +119,44 @@ namespace WebApp.Controllers
             Tuple<string, MessageVO, long?> tupleCountMethod = new Tuple<string, MessageVO, long?>(null, null, null);
             try
             {
-                exampleListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
-
                 if (pageIndex == null)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersNull").Replace("{0}", "pageIndex"));
+                else if (pageIndex.Value <= 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parametersAtZero").Replace("{0}", "pageIndex"));
+
+                if (messageVO.Messages.Count() > 0)
                 {
-                    tupleListMethod = ExampleImpl.List(new ExampleListDTO() { PageIndex = 0, PageSize = exampleListModel.PageSizeMaximun });
-                }
-                else if (pageIndex < 0)
-                {
-                    pageIndex = 1;
+                    messageVO.SetIdTitle(0, contentHTML.GetInnerTextById("requeridTitle"));
+                    exampleListModel.MessageVO.Add(messageVO);
                 }
                 else
                 {
+                    exampleListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
                     tupleListMethod = ExampleImpl.List(new ExampleListDTO() { PageIndex = pageIndex.Value, PageSize = exampleListModel.PageSizeMaximun });
-                }
 
-                if (tupleListMethod.Item3 == null || (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0))
-                    exampleListModel.PageIndex = 1;
-                else
-                    exampleListModel.PageIndex = pageIndex.Value;
+                    if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0)
+                        exampleListModel.PageIndex = 0;
+                    else
+                        exampleListModel.PageIndex = pageIndex.Value;
 
-                if (!string.IsNullOrWhiteSpace(tupleListMethod.Item1))
-                    exampleListModel.Response.Add(tupleListMethod.Item1);
-                else if (tupleListMethod.Item2 != null)
-                    exampleListModel.MessageVO.Add(tupleListMethod.Item2);
-                else if (tupleListMethod.Item3 != null)
-                    exampleListModel.Example = tupleListMethod.Item3;
+                    if (!string.IsNullOrWhiteSpace(tupleListMethod.Item1))
+                        exampleListModel.Response.Add(tupleListMethod.Item1);
+                    else if (tupleListMethod.Item2 != null)
+                        exampleListModel.MessageVO.Add(tupleListMethod.Item2);
+                    else if (tupleListMethod.Item3 != null)
+                        exampleListModel.Example = tupleListMethod.Item3;
 
-                if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() > 0)
-                {
-                    tupleCountMethod = ExampleImpl.TotalRecords();
+                    if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() > 0)
+                    {
+                        tupleCountMethod = ExampleImpl.TotalRecords();
 
-                    if (!string.IsNullOrWhiteSpace(tupleCountMethod.Item1))
-                        exampleListModel.Response.Add(tupleCountMethod.Item1);
-                    else if (tupleCountMethod.Item2 != null)
-                        exampleListModel.MessageVO.Add(tupleCountMethod.Item2);
-                    else if (tupleCountMethod.Item3 != null)
-                        exampleListModel.Count = tupleCountMethod.Item3;
+                        if (!string.IsNullOrWhiteSpace(tupleCountMethod.Item1))
+                            exampleListModel.Response.Add(tupleCountMethod.Item1);
+                        else if (tupleCountMethod.Item2 != null)
+                            exampleListModel.MessageVO.Add(tupleCountMethod.Item2);
+                        else if (tupleCountMethod.Item3 != null)
+                            exampleListModel.Count = tupleCountMethod.Item3;
+                    }
                 }
             }
             catch (Exception ex)
@@ -150,13 +175,15 @@ namespace WebApp.Controllers
                 MessageVO = null,
                 Example = null,
                 Updated = null
-            };
-            MessageVO messageVO = new MessageVO();
+            };            
             Tuple<string, MessageVO, bool?> tupleUpdateMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             Tuple<string, MessageVO, Example> tupleInsertMethod = new Tuple<string, MessageVO, Example>(null, null, null);
             try
             {
-                inputRut = inputRut.Replace(".", "");
+                if (id < 0)
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("parameterMustBeGreaterThanOrEqualToZero").Replace("{0}", "id"));
+
+                inputRut = (!string.IsNullOrWhiteSpace(inputRut)) ? inputRut.Replace(".", "") : inputRut;
 
                 if (string.IsNullOrWhiteSpace(inputRut))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("emptyParameters").Replace("{0}", "Rut"));
@@ -186,6 +213,8 @@ namespace WebApp.Controllers
                 
                 if (string.IsNullOrWhiteSpace(inputActiveRadioOptions))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("parameterNotSelected").Replace("{0}", "Active"));
+                else if (inputActiveRadioOptions != "yes" && inputActiveRadioOptions != "no")
+                    messageVO.Messages.Add(contentHTML.GetInnerTextById("formatMustBe").Replace("{0}", "yes y no"));
 
                 if (string.IsNullOrWhiteSpace(inputPassword))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("emptyParameters").Replace("{0}", "Password"));
@@ -198,7 +227,7 @@ namespace WebApp.Controllers
                     exampleConfirmModel.MessageVO = messageVO;
                 }
                 else
-                {
+                {           
                     if (id > 0)
                     {
                         tupleUpdateMethod = ExampleImpl.Update(new Example() { Id = id, Rut = inputRut.Trim(), Name = inputName.Trim(), LastName = inputLastName.Trim(), BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
@@ -247,14 +276,13 @@ namespace WebApp.Controllers
 
         [HttpPost]
         public ActionResult DownloadExcel()
-        {
-            Tuple<string, MessageVO, ExampleExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, ExampleExcelDTO>(null, null, null);
+        {            
             ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel()
             {
                 Response = string.Empty,
                 MessageVO = null
             };
-
+            Tuple<string, MessageVO, ExampleExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, ExampleExcelDTO>(null, null, null);
             try
             {
                 tupleExcelMethod = ExampleImpl.Excel();
@@ -278,12 +306,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadPDF()
         {
-            Tuple<string, MessageVO, ExamplePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, ExamplePDFDTO>(null, null, null);
             ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel()
             {
                 Response = string.Empty,
                 MessageVO = null
             };
+            Tuple<string, MessageVO, ExamplePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, ExamplePDFDTO>(null, null, null);
             try
             {
                 tuplePDFMethod = ExampleImpl.PDF();

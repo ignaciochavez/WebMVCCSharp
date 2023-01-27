@@ -169,25 +169,30 @@
             var rutInvested = "";
             var finalRut = "";
 
-            while (rut.indexOf(".") != -1) {
+            while (rut.indexOf(".") != -1)
+            {
                 rut = rut.replace(".", "");
             }
 
             rut = rut.replace("-", "");
 
-            for (var i = rut.length - 1; i >= 0; i--) {
+            for (var i = rut.length - 1; i >= 0; i--)
+            {
                 rutInvested += rut.charAt(i);
-                if (i == rut.length - 1) {
+                if (i == rut.length - 1)
+                {
                     rutInvested += "-";
                 }
-                else if (counter == 3) {
+                else if (counter == 3)
+                {
                     rutInvested += ".";
                     counter = 0;
                 }
                 counter++;
             }
 
-            for (var j = rutInvested.length - 1; j >= 0; j--) {
+            for (var j = rutInvested.length - 1; j >= 0; j--)
+            {
                 if (rutInvested.charAt(rutInvested.length - 1) != ".")
                     finalRut += rutInvested.charAt(j);
                 else if (j != rutInvested.length - 1)
@@ -244,18 +249,37 @@
     {
         var stringMessage = '';
 
+        var valInputId = $('#id').val();
+        if (valInputId < 0)
+            stringMessage = '- Parámetro id debe ser mayor o igual que 0';
+
         var valInputRut = $('#inputRut').val();
         if (valInputRut.trim().length == 0)
         {
-            stringMessage = '- Parámetro Rut no puede estar vacio';
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Rut no puede estar vacio';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Rut no puede estar vacio';
+
         }
         else if (valInputRut.trim().length > getMaxValueInputRut())
         {
-            stringMessage = '- Parámetro Rut no debe ser mayor a ' + getMaxValueInputRut() + ' caracteres de largo';
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Rut no debe ser mayor a ' + getMaxValueInputRut() + ' caracteres de largo';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Rut no debe ser mayor a ' + getMaxValueInputRut() + ' caracteres de largo';
+
         }
         else if (!onValidateRut(valInputRut))
         {
-            stringMessage = '- Parámetro Rut no es válido';
+
+            if (stringMessage.length == 0)
+                stringMessage = '- Parámetro Rut no es válido';
+            else
+                stringMessage = stringMessage + '\n- Parámetro Rut no es válido';
+
         }
 
         var valInputName = $('#inputName').val();
