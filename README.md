@@ -12,6 +12,8 @@ Visual studio 2015 .NET C#
 
 Tener codigo fuente de solucion
 
+Tener codigo fuente de solucion OpenAPICSharp (https://github.com/ignaciochavez/OpenAPICSharp)
+
 Tener IIS instalado
 
 Habilitar Sitio web IIS
