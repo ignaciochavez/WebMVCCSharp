@@ -117,8 +117,21 @@ namespace Business.Tool
 
         public static bool ValidateBase64String(string base64String)
         {
-            base64String = base64String.Trim();
-            return (base64String.Length % 4 == 0) && Regex.IsMatch(base64String, @GetAppSettings("IsBase64String"), RegexOptions.None);
+            return (base64String.Trim().Length % 4 == 0) && Regex.IsMatch(base64String.Trim(), @GetAppSettings("IsBase64String"), RegexOptions.None);
+        }
+
+        public static bool ValidateIsImageBase64String(string base64String)
+        {
+            if (!base64String.Contains("data:image/bmp;base64") && !base64String.Contains("data:image/emf;base64") && !base64String.Contains("data:image/exif;base64") && !base64String.Contains("data:image/gif;base64")
+                && !base64String.Contains("data:image/icon;base64") && !base64String.Contains("data:image/jpeg;base64") && !base64String.Contains("data:image/jpg;base64") && !base64String.Contains("data:image/png;base64")
+                && !base64String.Contains("data:image/tiff;base64") && !base64String.Contains("data:image/wmf;base64"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         #endregion

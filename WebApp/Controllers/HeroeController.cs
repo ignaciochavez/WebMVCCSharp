@@ -218,10 +218,7 @@ namespace WebApp.Controllers
                 {
 
                     string[] arrayImgBase64String = inputImgBase64String.Split(',');
-                    if (!arrayImgBase64String[0].Contains("data:image/bmp;base64") && !arrayImgBase64String[0].Contains("data:image/emf;base64") && !arrayImgBase64String[0].Contains("data:image/exif;base64")
-                        && !arrayImgBase64String[0].Contains("data:image/gif;base64") && !arrayImgBase64String[0].Contains("data:image/icon;base64") && !arrayImgBase64String[0].Contains("data:image/jpeg;base64")
-                        && !arrayImgBase64String[0].Contains("data:image/jpg;base64") && !arrayImgBase64String[0].Contains("data:image/png;base64") && !arrayImgBase64String[0].Contains("data:image/tiff;base64")
-                        && !arrayImgBase64String[0].Contains("data:image/wmf;base64"))
+                    if (!Useful.ValidateIsImageBase64String(arrayImgBase64String[0]))
                         messageVO.Messages.Add(contentHTML.GetInnerTextById("formatMustBe").Replace("{0}", "ImgBase64String").Replace("{1}", "bmp, emf, exif, gif, icon, jpeg, jpg, png, tiff o wmf"));
 
                 }
