@@ -26,7 +26,11 @@ Habilitar directorio y sitio web IIS
 
 ## Ejecutando las pruebas ⚙️
 
+Ejecutar pruebas unitarias desde visual studio para verificar correcto funcionamiento. Debe estar en ejecucion el servicio OpenAPICSharp y debe apuntar correctamente en el archivo web.config
+
 Una vez publicado el proyecto, abrir el sitio web IIS, redireccionar a la pagina Home
+
+Posteriormente presionar en el boton Check OpenAPICSharp y verificar que el servicio se comunique correctamente con la solucion OpenAPICSharp
 
 Ejemplo de sitio inicial:
 ```
