@@ -37,14 +37,25 @@
                 </div>
             </div>
         }
-        else if (Model.Example != null && Model.Example.Id > 0)
+        else if (Model.Example != null)
         {
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Proceso completado</h4>
-                        <p>Registro insertado correctamente</p>
-                    </div>
+                    @if (Model.Example.Id > 0)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">0 - Proceso completado</h4>
+                            <p>Registro insertado correctamente</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary" role="alert">
+                            <h4 class="alert-heading">0 - Proceso no completado</h4>
+                            <p>Registro no insertado correctamente</p>
+                        </div>
+                    }
+
                 </div>
             </div>
         }
@@ -52,10 +63,21 @@
         {
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Proceso completado</h4>
-                        <p>Registro actualizado correctamente</p>
-                    </div>
+                    @if (Model.Updated.Value)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">0 - Proceso completado</h4>
+                            <p>Registro actualizado correctamente</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary" role="alert">
+                            <h4 class="alert-heading">0 - Proceso no completado</h4>
+                            <p>Registro actualizado correctamente</p>
+                        </div>
+                    }
+                    
                 </div>
             </div>
         }
@@ -64,7 +86,7 @@
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
                     <div class="alert alert-primary" role="alert">
-                        <h4 class="alert-heading">Sin proceso trabajado</h4>
+                        <h4 class="alert-heading">0 - Sin proceso trabajado</h4>
                         <p>No se han realizado trabajos internos</p>
                     </div>
                 </div>

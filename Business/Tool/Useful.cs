@@ -70,6 +70,34 @@ namespace Business.Tool
             return rutDigit;
         }
 
+        public static string GetFormatRut(string rut)
+        {
+            int count = 0;
+            string format;
+            if (rut.Length == 0)
+            {
+                return "";
+            }
+            else
+            {
+                rut = rut.Replace(" ", "");
+                rut = rut.Replace(".", "");
+                rut = rut.Replace("-", "");
+                format = "-" + rut.Substring(rut.Length - 1);
+                for (int i = rut.Length - 2; i >= 0; i--)
+                {
+                    format = rut.Substring(i, 1) + format;
+                    count++;
+                    if (count == 3 && i != 0)
+                    {
+                        format = "." + format;
+                        count = 0;
+                    }
+                }
+                return format;
+            }
+        }
+
         public static string OpenAPICSharpNameHeader()
         {
             return "API-KEY";

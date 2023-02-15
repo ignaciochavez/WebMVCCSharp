@@ -14,5 +14,20 @@ namespace Business.Entity
         public DateTimeOffset Appearance { get; set; }
         public string Description { get; set; }
         public string ImgBase64String { get; set; }
+
+        public Heroe()
+        {
+
+        }
+
+        public Heroe(int id, string name, string home, DateTimeOffset appearance, string description, string imgBase64String)
+        {
+            Id = id;
+            Name = name;
+            Home = home;
+            Appearance = appearance;
+            Description = description;
+            ImgBase64String = imgBase64String;
+        }
     }
 }

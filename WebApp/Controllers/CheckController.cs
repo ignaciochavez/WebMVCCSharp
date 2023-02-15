@@ -12,17 +12,13 @@ namespace WebApp.Controllers
 {
     public class CheckController : Controller
     {
-        MessageVO messageVO = new MessageVO();
-        ContentHTML contentHTML = new ContentHTML();
+        private MessageVO messageVO = new MessageVO();
+        private ContentHTML contentHTML = new ContentHTML();
 
         [HttpGet]
         public ActionResult Check()
         {
-            CheckCheckModel checkCheckModel = new CheckCheckModel()
-            {
-                MessageVO = null,
-                HttpStatusCode = null
-            };
+            CheckCheckModel checkCheckModel = new CheckCheckModel(null, null);
             try
             {
                 if (contentHTML.IsLoadDocumentHTML())
@@ -48,12 +44,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult OpenAPICSharpCheck()
         {
-            CheckOpenAPICSharpCheck checkOpenAPICSharpCheck = new CheckOpenAPICSharpCheck()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                MessageVOOk = null
-            };
+            CheckOpenAPICSharpCheck checkOpenAPICSharpCheck = new CheckOpenAPICSharpCheck(string.Empty, null, null);
             Tuple<string, MessageVO, MessageVO> tupleCheckMethod = new Tuple<string, MessageVO, MessageVO>(null, null, null);
             try
             {
@@ -77,12 +68,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult OpenAPICSharpCheckAuth()
         {
-            CheckOpenAPICSharpCheckAuth checkOpenAPICSharpCheckAuth = new CheckOpenAPICSharpCheckAuth()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                MessageVOOk = null
-            };
+            CheckOpenAPICSharpCheckAuth checkOpenAPICSharpCheckAuth = new CheckOpenAPICSharpCheckAuth(string.Empty, null, null);
             Tuple<string, MessageVO, MessageVO> tupleCheckAuthMethod = new Tuple<string, MessageVO, MessageVO>(null, null, null);
             try
             {

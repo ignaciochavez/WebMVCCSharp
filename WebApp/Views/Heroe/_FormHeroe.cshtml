@@ -47,7 +47,7 @@
                     @Html.Label("inputAppearance", "Appearance", new { @class = "col-form-label" })
                 </div>
                 <div class="col-sm-8">
-                    @Html.TextBox("inputAppearance", (Model != null) ? Model.Appearance.ToString("yyyy-MM-dd") : "", new { @class = "form-control" })
+                    @Html.TextBox("inputAppearance", (Model != null) ? Model.Appearance.ToString("yyyy-MM-dd") : "", new { @class = "form-control", @onkeypress = "return onOnlyCharactersOfAppearance(event)" })
                     <i class="fa fa-custom fa-calendar" onclick="showInputAppearance()"></i>
                 </div>
             </div>
@@ -114,6 +114,7 @@
 
         $('#inputName').attr('maxlength', getMaxValueInputName());
         $('#inputHome').attr('maxlength', getMaxValueInputHome());
+        $('#inputAppearance').attr('maxlength', getMaxValueInputAppearance());
         $('#inputDescription').attr('maxlength', getMaxValueInputDescription());
     }
 
@@ -142,6 +143,29 @@
     {
         var date = '@DateTime.Now.ToString("yyyy-MM-dd")';
         return date;
+    }
+
+    function getMaxValueInputAppearance()
+    {
+        return 10;
+    }
+
+    function onOnlyCharactersOfAppearance(evt)
+    {
+        var code = (evt.which) ? evt.which : evt.keyCode;
+
+        if (code >= 48 && code <= 57)
+        {
+            return true;
+        }
+        else if (code == 45)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     function notIncludeConventionsInputImgBase64String(value)
@@ -321,28 +345,32 @@
                 stringMessage = stringMessage + '\n- Parámetro ImgBase64String no puede estar vacio';
 
         }
-
-        var notIncludeConventions = notIncludeConventionsInputImgBase64String(valInputImgBase64String);
-        if (notIncludeConventions.length > 0)
+        else
         {
+            var notIncludeConventions = notIncludeConventionsInputImgBase64String(valInputImgBase64String);
+            if (notIncludeConventions.length > 0)
+            {
 
-            if (stringMessage.length == 0)
-                stringMessage = '- ' + notIncludeConventions;
+                if (stringMessage.length == 0)
+                    stringMessage = '- ' + notIncludeConventions;
+                else
+                    stringMessage = stringMessage + '\n- ' + notIncludeConventions;
+
+            }
             else
-                stringMessage = stringMessage + '\n- ' + notIncludeConventions;
+            {
+                var arrayValInputImgBase64String = valInputImgBase64String.split(',');
+                var isBase64String = validateBase64String(arrayValInputImgBase64String[1]);
+                if (isBase64String.length > 0)
+                {
 
-        }
-
-        var arrayValInputImgBase64String = valInputImgBase64String.split(',');
-        var isBase64String = validateBase64String(arrayValInputImgBase64String[1]);
-        if (isBase64String.length > 0)
-        {
-
-            if (stringMessage.length == 0)
-                stringMessage = '- ' + isBase64String;
-            else
-                stringMessage = stringMessage + '\n- ' + isBase64String;
-        }
+                    if (stringMessage.length == 0)
+                        stringMessage = '- ' + isBase64String;
+                    else
+                        stringMessage = stringMessage + '\n- ' + isBase64String;
+                }
+            }
+        }          
 
         if (stringMessage.length == 0) {
             return true;

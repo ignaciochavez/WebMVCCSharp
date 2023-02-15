@@ -14,8 +14,8 @@ namespace WebApp.Controllers
 {
     public class HeroeController : Controller
     {
-        ContentHTML contentHTML = new ContentHTML();
-        MessageVO messageVO = new MessageVO();
+        private ContentHTML contentHTML = new ContentHTML();
+        private MessageVO messageVO = new MessageVO();
 
         [HttpGet]
         public ActionResult Insert()
@@ -26,12 +26,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Update(int? id = 0)
         {
-            HeroeUpdateModel heroeUpdateModel = new HeroeUpdateModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Heroe = null
-            };
+            HeroeUpdateModel heroeUpdateModel = new HeroeUpdateModel(string.Empty, null, null);
             Tuple<string, MessageVO, Heroe> tupleSelectMethod = new Tuple<string, MessageVO, Heroe>(null, null, null);
             try
             {
@@ -67,12 +62,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult Delete(int? id = 0)
         {
-            HeroeDeleteModel heroeDeleteModel = new HeroeDeleteModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Delete = null
-            };
+            HeroeDeleteModel heroeDeleteModel = new HeroeDeleteModel(string.Empty, null, null);
             Tuple<string, MessageVO, bool?> tupleDeleteMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             try
             {
@@ -108,12 +98,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult List(int? pageIndex = 1)
         {
-            HeroeListModel heroeListModel = new HeroeListModel()
-            {
-                Response = new List<string>(),
-                MessageVO = new List<MessageVO>(),
-                Heroe = new List<Heroe>()
-            };
+            HeroeListModel heroeListModel = new HeroeListModel(new List<string>(), new List<MessageVO>(), new List<Heroe>(), 0, null, 0);
             Tuple<string, MessageVO, List<Heroe>> tupleListMethod = new Tuple<string, MessageVO, List<Heroe>>(null, null, null);
             Tuple<string, MessageVO, long?> tupleCountMethod = new Tuple<string, MessageVO, long?>(null, null, null);
             try
@@ -131,7 +116,7 @@ namespace WebApp.Controllers
                 else
                 {
                     heroeListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
-                    tupleListMethod = HeroeImpl.List(new HeroeListDTO() { PageIndex = pageIndex.Value, PageSize = heroeListModel.PageSizeMaximun });
+                    tupleListMethod = HeroeImpl.List(new HeroeListDTO(pageIndex.Value, heroeListModel.PageSizeMaximun));
 
                     if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0)
                         heroeListModel.PageIndex = 0;
@@ -168,13 +153,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult ConfirmFormHeroe(int id, string inputName, string inputHome, string inputAppearance, string inputDescription, string inputImgBase64String)
         {
-            HeroeConfirmModel heroeConfirmModel = new HeroeConfirmModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Heroe = null,
-                Updated = null
-            };
+            HeroeConfirmModel heroeConfirmModel = new HeroeConfirmModel(string.Empty, null, null, null);
             Tuple<string, MessageVO, bool?> tupleUpdateMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             Tuple<string, MessageVO, Heroe> tupleInsertMethod = new Tuple<string, MessageVO, Heroe>(null, null, null);
             try
@@ -192,13 +171,13 @@ namespace WebApp.Controllers
                 else if (inputHome.Trim().Length > 35)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("maximunParameterLengthCharacter").Replace("{0}", "Home").Replace("{1}", "35"));
                 
-                DateTimeOffset Appearance = new DateTimeOffset();
-                bool isDate = DateTimeOffset.TryParseExact(inputAppearance, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out Appearance);
+                DateTimeOffset appearance = new DateTimeOffset();
+                bool isDate = DateTimeOffset.TryParseExact(inputAppearance, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out appearance);
                 if (!isDate)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("invalidFormatParameters").Replace("{0}", "Appearance"));
-                else if (!Useful.ValidateDateTimeOffset(Appearance))
+                else if (!Useful.ValidateDateTimeOffset(appearance))
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("dateTimeParametersNoInitialized").Replace("{0}", "Appearance"));
-                else if (Appearance > DateTimeOffset.Now)
+                else if (appearance > DateTimeOffset.Now)
                     messageVO.Messages.Add(contentHTML.GetInnerTextById("dateTimeParameterGreaterThanTheCurrentDate").Replace("{0}", "Appearance"));
 
                 if (string.IsNullOrWhiteSpace(inputDescription))
@@ -232,7 +211,7 @@ namespace WebApp.Controllers
                 {
                     if (id > 0)
                     {
-                        tupleUpdateMethod = HeroeImpl.Update(new Heroe() { Id = id, Name = inputName.Trim(), Home = inputHome.Trim(), Appearance = Appearance, Description = inputDescription.Trim(), ImgBase64String = inputImgBase64String.Trim() });
+                        tupleUpdateMethod = HeroeImpl.Update(new Heroe(id, inputName.Trim(), inputHome.Trim(), appearance, inputDescription.Trim(), inputImgBase64String.Trim()));
 
                         if (!string.IsNullOrWhiteSpace(tupleUpdateMethod.Item1))
                             heroeConfirmModel.Response = tupleUpdateMethod.Item1;
@@ -243,7 +222,7 @@ namespace WebApp.Controllers
                     }
                     else
                     {
-                        tupleInsertMethod = HeroeImpl.Insert(new HeroeInsertDTO() { Name = inputName.Trim(), Home = inputHome.Trim(), Appearance = Appearance, Description = inputDescription.Trim(), ImgBase64String = inputImgBase64String.Trim() });
+                        tupleInsertMethod = HeroeImpl.Insert(new HeroeInsertDTO(inputName.Trim(), inputHome.Trim(), appearance, inputDescription.Trim(), inputImgBase64String.Trim()));
 
                         if (!string.IsNullOrWhiteSpace(tupleInsertMethod.Item1))
                             heroeConfirmModel.Response = tupleInsertMethod.Item1;
@@ -278,11 +257,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadExcel()
         {
-            HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel()
-            {
-                Response = string.Empty,
-                MessageVO = null
-            };
+            HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel(string.Empty, null);
             Tuple<string, MessageVO, HeroeExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, HeroeExcelDTO>(null, null, null);
             try
             {
@@ -307,11 +282,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadPDF()
         {
-            HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel()
-            {
-                Response = string.Empty,
-                MessageVO = null
-            };
+            HeroeDownloadModel heroeDownloadModel = new HeroeDownloadModel(string.Empty, null);
             Tuple<string, MessageVO, HeroePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, HeroePDFDTO>(null, null, null);
             try
             {

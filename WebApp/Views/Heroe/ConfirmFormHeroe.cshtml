@@ -41,10 +41,20 @@
         {
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Proceso completado</h4>
-                        <p>Registro insertado correctamente</p>
-                    </div>
+                    @if (Model.Heroe.Id > 0)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">0 - Proceso completado</h4>
+                            <p>Registro insertado correctamente</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary" role="alert">
+                            <h4 class="alert-heading">0 - Proceso no completado</h4>
+                            <p>Registro no insertado correctamente</p>
+                        </div>
+                    }
                 </div>
             </div>
         }
@@ -52,10 +62,21 @@
         {
             <div class="row justify-content-center mt-3">
                 <div class="col-md-10">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Proceso completado</h4>
-                        <p>Registro actualizado correctamente</p>
-                    </div>
+                    @if (Model.Updated.Value)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">0 - Proceso completado</h4>
+                            <p>Registro actualizado correctamente</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary" role="alert">
+                            <h4 class="alert-heading">0 - Proceso no completado</h4>
+                            <p>Registro actualizado correctamente</p>
+                        </div>
+                    }
+
                 </div>
             </div>
         }

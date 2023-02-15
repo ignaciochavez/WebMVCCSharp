@@ -16,194 +16,196 @@
         overflow: auto;
         white-space: nowrap;
     }
-
+    
 </style>
 
-<div class="mt-3 pb-3" style="border: 3px solid rgba(50, 50, 50, 0.3); border-radius: 6px; width: 100%; height: 100%;">
-    <div class="row ">
-        <div class="col-md-6 text-center my-auto mx-auto">
-            <h1 class="mt-3">@ViewBag.Title</h1>
-        </div>
-        <div class="col-md-6 text-center my-auto mx-auto">
-            <h2 class="mt-3">Pagina @Model.PageIndex</h2>
-        </div>
-    </div>
-
-    @if (Model.Response.Count() > 0)
-    {
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-10">
-                <div class="alert alert-danger" role="alert">
-                    <h4 class="alert-heading">Error</h4>
-                    @foreach (var responses in Model.Response)
-                    {
-                        <p>@responses</p>
-                    }                    
-                </div>
+<div style="min-height: 78.3vh;">
+    <div class="mt-3 pb-3" style="border: 3px solid rgba(50, 50, 50, 0.3); border-radius: 6px; width: 100%; height: 100%;">
+        <div class="row ">
+            <div class="col-md-6 text-center my-auto mx-auto">
+                <h1 class="mt-3">@ViewBag.Title</h1>
+            </div>
+            <div class="col-md-6 text-center my-auto mx-auto">
+                <h2 class="mt-3">Pagina @Model.PageIndex</h2>
             </div>
         </div>
-    }
-    else if (Model.MessageVO.Count() > 0)
-    {
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-10">
-                @foreach (var messageVO in Model.MessageVO)
-                {
-                    <div class="alert alert-secondary" role="alert">
-                        <h4 class="alert-heading">@messageVO.Id - @messageVO.Title</h4>
-                        @foreach (var messages in messageVO.Messages)
+
+        @if (Model.Response.Count() > 0)
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Error</h4>
+                        @foreach (var responses in Model.Response)
                         {
-                            <p>@messages</p>
+                            <p>@responses</p>
                         }
                     </div>
-                }
+                </div>
             </div>
-        </div>
-    }
-    else if (Model.Example.Count() > 0)
-    {
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-10">
-                <div class="table-responsive-sm table-responsive-md table-responsive-lg">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Rut</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">LastName</th>
-                                <th scope="col">BirthDate</th>
-                                <th scope="col">Active</th>
-                                <th scope="col">Password</th>
-                                <th scope="col">Accion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var example in Model.Example)
+        }
+        else if (Model.MessageVO.Count() > 0)
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    @foreach (var messageVO in Model.MessageVO)
+                {
+                        <div class="alert alert-secondary" role="alert">
+                            <h4 class="alert-heading">@messageVO.Id - @messageVO.Title</h4>
+                            @foreach (var messages in messageVO.Messages)
                             {
-                                <tr>
-                                    <th scope="row">@example.Id</th>
-                                    <td scope="row">@example.Rut</td>
-                                    <td scope="row">@example.Name</td>
-                                    <td scope="row">@example.LastName</td>
-                                    <td scope="row">@example.BirthDate.ToString("yyyy-MM-dd")</td>
-                                    @if (example.Active)
-                                    {
-                                        <td scope="row">VERDADERO</td>
-                                    }
-                                    else
-                                    {
-                                        <td scope="row">FALSO</td>
-                                    }
-                                    <td scope="row" class="password">@example.Password</td>
-                                    <td scope="row">
-                                        <a href="@Url.Action("Update", "Example", new { Id = example.Id })" class="btn btn-outline-secondary btn-sm"><i class="fa fa-pencil-square-o">Editar</i></a>
-                                        &nbsp;
-                                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modalDelete" onclick="onClickOpenModalDelete(@example.Id)"><i class="fa fa-trash">Eliminar</i></button>
-                                    </td>
-                                </tr>
+                                <p>@messages</p>
                             }
-                        </tbody>
-                    </table>
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
-    }
-    else if (Model.Example.Count() == 0)
-    {
+        }
+        else if (Model.Example.Count() > 0)
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Rut</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">LastName</th>
+                                    <th scope="col">BirthDate</th>
+                                    <th scope="col">Active</th>
+                                    <th scope="col">Password</th>
+                                    <th scope="col">Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var example in Model.Example)
+                                {
+                                    <tr>
+                                        <th scope="row">@example.Id</th>
+                                        <td scope="row">@example.Rut</td>
+                                        <td scope="row">@example.Name</td>
+                                        <td scope="row">@example.LastName</td>
+                                        <td scope="row">@example.BirthDate.ToString("yyyy-MM-dd")</td>
+                                        @if (example.Active)
+                                        {
+                                            <td scope="row">VERDADERO</td>
+                                        }
+                                        else
+                                        {
+                                            <td scope="row">FALSO</td>
+                                        }
+                                        <td scope="row" class="password">@example.Password</td>
+                                        <td scope="row">
+                                            <a href="@Url.Action("Update", "Example", new { Id = example.Id })" class="btn btn-outline-secondary btn-sm"><i class="fa fa-pencil-square-o"> Editar</i></a>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#modalDelete" onclick="onClickOpenModalDelete(@example.Id)"><i class="fa fa-trash"> Eliminar</i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Model.Example.Count() == 0)
+        {
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-10">
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">0 - No Encontrado</h4>
+                        <p>No existen registros encontrados</p>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="row justify-content-center mt-3">
-            <div class="col-md-10">
-                <div class="alert alert-info" role="alert">
-                    <h4 class="alert-heading">No Encontrado</h4>
-                    <p>No existen registros encontrados</p>
-                </div>
-            </div>
-        </div>
-    }
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-7">
-            <nav aria-label="..." style="right: 0;">
-                <ul class="pagination">
-                    @if (Model.Example.Count() > 0)
-                    {
-                        if (Model.PageIndex == 1)
+            <div class="col-md-7">
+                <nav aria-label="..." style="right: 0;">
+                    <ul class="pagination">
+                        @if (Model.Example.Count() > 0)
                         {
-                            <li class="page-item disabled">
-                                <span class="page-link">Anterior</span>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="page-item">
-                                <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = Model.PageIndex - 1 })">Anterior</a>
-                            </li>
-                        }
-
-                        for (int i = 1; i < totalPages + 1; i++)
-                        {
-                            if (Model.PageIndex == i)
+                            if (Model.PageIndex == 1)
                             {
-                                <li class="page-item active" aria-current="page">
-                                    <span class="page-link">@i</span>
+                                <li class="page-item disabled">
+                                    <span class="page-link">Anterior</span>
                                 </li>
                             }
                             else
                             {
                                 <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = i })">@i</a>
+                                    <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = Model.PageIndex - 1 })">Anterior</a>
+                                </li>
+                            }
+
+                            for (int i = 1; i < totalPages + 1; i++)
+                            {
+                                if (Model.PageIndex == i)
+                                {
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">@i</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = i })">@i</a>
+                                    </li>
+                                }
+                            }
+
+                            if (Model.PageIndex == totalPages)
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Siguiente</span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = Model.PageIndex + 1 })">Siguiente</a>
                                 </li>
                             }
                         }
-
-                        if (Model.PageIndex == totalPages)
-                        {
-                            <li class="page-item disabled">
-                                <span class="page-link">Siguiente</span>
-                            </li>
-                        }
                         else
                         {
-                            <li class="page-item">
-                                <a class="page-link" href="@Url.Action("List", "Example", new { pageIndex = Model.PageIndex + 1 })">Siguiente</a>
+                            <li class="page-item disabled">
+                                <span class="page-link">Sin Resultados</span>
                             </li>
                         }
-                    }
-                    else
-                    {
-                        <li class="page-item disabled">
-                            <span class="page-link">Sin Resultados</span>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
-        <div class="col-md-3">
-            <div class="col-sm-12" style="float: right;">
-                <a type="button" class="btn btn-outline-primary btn-block" href="@Url.Action("Insert","Example")"><i class="fa fa-plus-circle"> Insertar Nuevo Registro</i></a>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3">
+                <div class="col-sm-12" style="float: right;">
+                    <a type="button" class="btn btn-outline-primary btn-block" href="@Url.Action("Insert","Example")"><i class="fa fa-plus-circle"> Insertar Nuevo Registro</i></a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="col-md-6" style="border: 1px solid rgba(50, 50, 50, 0.3); margin-top: 30px; margin-left: auto; margin-right: auto; border-radius: 6px;">
-    <div class="col-md-12">
-        <span>&nbsp;</span>
-        <h4 style="text-align: center;">Descargar todos los registros existentes</h4>
-        <span>&nbsp;</span>
-    </div>
-    <div class="row justify-content-center">        
-        @using (Html.BeginForm("DownloadExcel", "Example", FormMethod.Post, new { @class = "col-md-5" }))
+    <div class="col-md-6" style="border: 1px solid rgba(50, 50, 50, 0.3); margin-top: 30px; margin-left: auto; margin-right: auto; border-radius: 6px;">
+        <div class="col-md-12">
+            <span>&nbsp;</span>
+            <h4 style="text-align: center;">Descargar todos los registros existentes</h4>
+            <span>&nbsp;</span>
+        </div>
+        <div class="row justify-content-center">
+            @using (Html.BeginForm("DownloadExcel", "Example", FormMethod.Post, new { @class = "col-md-5" }))
             {
-            <button type="submit" class="btn btn-outline-success btn-block"><i class="fa fa-file-excel-o"> Descargar Excel</i></button>
-        }
-        <span>&nbsp;</span>
-        @using (Html.BeginForm("DownloadPDF", "Example", FormMethod.Post, new { @class = "col-md-5" }))
+                <button type="submit" class="btn btn-outline-success btn-block"><i class="fa fa-file-excel-o"> Descargar Excel</i></button>
+            }
+            <span>&nbsp;</span>
+            @using (Html.BeginForm("DownloadPDF", "Example", FormMethod.Post, new { @class = "col-md-5" }))
             {
-            <button type="submit" class="btn btn-outline-danger btn-block"><i class="fa fa-file-pdf-o"> Descargar PDF</i></button>
-        }
-    </div>
-    <div class="col-md-12">
-        <span>&nbsp;</span>
+                <button type="submit" class="btn btn-outline-danger btn-block"><i class="fa fa-file-pdf-o"> Descargar PDF</i></button>
+            }
+        </div>
+        <div class="col-md-12">
+            <span>&nbsp;</span>
+        </div>
     </div>
 </div>
 
@@ -222,8 +224,8 @@
             @using (Html.BeginForm("Delete", "Example", FormMethod.Post, new { @class = "modal-footer" }))
             {
                 <input type="hidden" id="id" name="id" value="" />
-                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" onclick="onClickCloseModalDelete()"><i class="fa fa-times">Cerrar</i></button>
-                <button type="submit" class="btn btn-outline-success"><i class="fa fa-trash">Eliminar</i></button>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" onclick="onClickCloseModalDelete()"><i class="fa fa-times"> Cerrar</i></button>
+                <button type="submit" class="btn btn-outline-success"><i class="fa fa-trash"> Eliminar</i></button>
             }
         </div>
     </div>

@@ -15,5 +15,21 @@ namespace Business.Entity
         public DateTimeOffset BirthDate { get; set; }
         public bool Active { get; set; }
         public string Password { get; set; }
+
+        public Example()
+        {
+
+        }
+
+        public Example(int id, string rut, string name, string lastName, DateTimeOffset birthDate, bool active, string password)
+        {
+            Id = id;
+            Rut = rut;
+            Name = name;
+            LastName = lastName;
+            BirthDate = birthDate;
+            Active = active;
+            Password = password;
+        }
     }
 }

@@ -14,8 +14,8 @@ namespace WebApp.Controllers
 {
     public class ExampleController : Controller
     {
-        ContentHTML contentHTML = new ContentHTML();
-        MessageVO messageVO = new MessageVO();
+        private ContentHTML contentHTML = new ContentHTML();
+        private MessageVO messageVO = new MessageVO();
 
         [HttpGet]
         public ActionResult Insert()
@@ -26,13 +26,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Update(int? id = 0)
         {
-            ExampleUpdateModel exampleUpdateModel = new ExampleUpdateModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Example = null
-            };
-
+            ExampleUpdateModel exampleUpdateModel = new ExampleUpdateModel(string.Empty, null, null);
             Tuple<string, MessageVO, Example> tupleSelectMethod = new Tuple<string, MessageVO, Example>(null, null, null);
             try
             {
@@ -68,12 +62,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult Delete(int? id = 0)
         {
-            ExampleDeleteModel exampleDeleteModel = new ExampleDeleteModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Delete = null
-            };
+            ExampleDeleteModel exampleDeleteModel = new ExampleDeleteModel(string.Empty, null, null);
             Tuple<string, MessageVO, bool?> tupleDeleteMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             try
             {
@@ -109,12 +98,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult List(int? pageIndex = 1)
         {
-            ExampleListModel exampleListModel = new ExampleListModel()
-            {
-                Response = new List<string>(),
-                MessageVO = new List<MessageVO>(),
-                Example = new List<Example>()
-            };
+            ExampleListModel exampleListModel = new ExampleListModel(new List<string>(), new List<MessageVO>(), new List<Example>(), 0, null, 0);
             Tuple<string, MessageVO, List<Example>> tupleListMethod = new Tuple<string, MessageVO, List<Example>>(null, null, null);
             Tuple<string, MessageVO, long?> tupleCountMethod = new Tuple<string, MessageVO, long?>(null, null, null);
             try
@@ -132,7 +116,7 @@ namespace WebApp.Controllers
                 else
                 {
                     exampleListModel.PageSizeMaximun = Useful.GetPageSizeMaximun();
-                    tupleListMethod = ExampleImpl.List(new ExampleListDTO() { PageIndex = pageIndex.Value, PageSize = exampleListModel.PageSizeMaximun });
+                    tupleListMethod = ExampleImpl.List(new ExampleListDTO(pageIndex.Value, exampleListModel.PageSizeMaximun));
 
                     if (tupleListMethod.Item3 != null && tupleListMethod.Item3.Count() == 0)
                         exampleListModel.PageIndex = 0;
@@ -169,13 +153,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult ConfirmFormExample(int id, string inputRut, string inputName, string inputLastName, string inputBirthDate, string inputActiveRadioOptions, string inputPassword)
         {
-            ExampleConfirmModel exampleConfirmModel = new ExampleConfirmModel()
-            {
-                Response = string.Empty,
-                MessageVO = null,
-                Example = null,
-                Updated = null
-            };            
+            ExampleConfirmModel exampleConfirmModel = new ExampleConfirmModel(string.Empty, null, null, null);
             Tuple<string, MessageVO, bool?> tupleUpdateMethod = new Tuple<string, MessageVO, bool?>(null, null, null);
             Tuple<string, MessageVO, Example> tupleInsertMethod = new Tuple<string, MessageVO, Example>(null, null, null);
             try
@@ -230,7 +208,7 @@ namespace WebApp.Controllers
                 {           
                     if (id > 0)
                     {
-                        tupleUpdateMethod = ExampleImpl.Update(new Example() { Id = id, Rut = inputRut.Trim(), Name = inputName.Trim(), LastName = inputLastName.Trim(), BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
+                        tupleUpdateMethod = ExampleImpl.Update(new Example(id, inputRut.Trim(), inputName.Trim(), inputLastName.Trim(), birthDate, ((inputActiveRadioOptions.Trim() == "yes") ? true : false), inputPassword));
 
                         if (!string.IsNullOrWhiteSpace(tupleUpdateMethod.Item1))
                             exampleConfirmModel.Response = tupleUpdateMethod.Item1;
@@ -241,7 +219,7 @@ namespace WebApp.Controllers
                     }
                     else
                     {
-                        tupleInsertMethod = ExampleImpl.Insert(new ExampleInsertDTO() { Rut = inputRut.Trim(), Name = inputName.Trim(), LastName = inputLastName.Trim(), BirthDate = birthDate, Active = (inputActiveRadioOptions.Trim() == "yes") ? true : false, Password = inputPassword });
+                        tupleInsertMethod = ExampleImpl.Insert(new ExampleInsertDTO(inputRut.Trim(), inputName.Trim(), inputLastName.Trim(), birthDate, ((inputActiveRadioOptions.Trim() == "yes") ? true : false), inputPassword));
 
                         if (!string.IsNullOrWhiteSpace(tupleInsertMethod.Item1))
                             exampleConfirmModel.Response = tupleInsertMethod.Item1;
@@ -276,12 +254,8 @@ namespace WebApp.Controllers
 
         [HttpPost]
         public ActionResult DownloadExcel()
-        {            
-            ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel()
-            {
-                Response = string.Empty,
-                MessageVO = null
-            };
+        {
+            ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel(string.Empty, null);
             Tuple<string, MessageVO, ExampleExcelDTO> tupleExcelMethod = new Tuple<string, MessageVO, ExampleExcelDTO>(null, null, null);
             try
             {
@@ -306,11 +280,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult DownloadPDF()
         {
-            ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel()
-            {
-                Response = string.Empty,
-                MessageVO = null
-            };
+            ExampleDownloadModel exampleDownloadModel = new ExampleDownloadModel(string.Empty, null);
             Tuple<string, MessageVO, ExamplePDFDTO> tuplePDFMethod = new Tuple<string, MessageVO, ExamplePDFDTO>(null, null, null);
             try
             {
